@@ -1,5 +1,6 @@
 {
   "name": "SENG365-Auction-Site-API",
+  "author": "Ollie Chick <och26@uclive.ac.nz>",
   "version": "0.0.1",
   "scripts": {
     "start": "node server.js"

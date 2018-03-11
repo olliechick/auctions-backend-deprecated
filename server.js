@@ -1,15 +1,17 @@
 const
-    bodyParser = require('body-parser'),
-    express = require('express');
+    db = require('./config/db'),
+    express = require('./config/express');
 
-var app = express();
+const app = express();
 
-app.use(bodyParser.json());
-
-app.get('/', function (req, res) {
-    res.send({"message": "Hello World!"})
+// Connect to MySQL on startup
+db.connect(function (err) {
+    if (err) {
+        console.log("Unable to connect to MySQL.");
+        process.exit(1);
+    } else {
+        app.listen(3000, function () {
+            console.log("Listening on port: " + 3000);
+        });
+    }
 });
-
-app.listen(4941, function () {
-    console.log('Example app listening on container port 4941!')
-})
