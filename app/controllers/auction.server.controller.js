@@ -6,6 +6,25 @@ exports.list = function(req, res){
     });
 };
 
+function getCurrentDate() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+
+
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+
+    today = yyyy + "-" + mm + '-' + dd;
+    return today;
+}
+
 exports.create = function(req, res){
     let auction_data = {
         "title": req.body.title,
@@ -13,7 +32,7 @@ exports.create = function(req, res){
         "description": req.body.description,
         "reserveprice": req.body.reserveprice,
         "startingprice": req.body.startingprice,
-        "creationdate": req.body.creationdate,
+        "creationdate": getCurrentDate(),
         "startingdate": req.body.startingdate,
         "endingdate": req.body.endingdate,
         "userid": req.body.userid
