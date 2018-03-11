@@ -7,6 +7,7 @@ module.exports = function(){
     app.use(bodyParser.json());
 
     require('../app/routes/auction.server.routes.js')(app);
+    require('../app/routes/database.server.routes.js')(app);
 
     return app;
 };

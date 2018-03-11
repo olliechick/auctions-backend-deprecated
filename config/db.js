@@ -10,7 +10,8 @@ exports.connect = function(done) {
         port: 3306,
         user: 'och26',
         password: '67683982',
-        database: 'och26'
+        database: 'och26',
+        multipleStatements: true
     });
     done();
 };
