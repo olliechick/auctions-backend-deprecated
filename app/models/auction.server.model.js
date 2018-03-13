@@ -25,5 +25,5 @@ exports.insert = function (values, done) {
 };
 
 exports.alter = function () {
-    return null;
+    let queryString = "UPDATE ";
 };
