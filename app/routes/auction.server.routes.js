@@ -1,11 +1,12 @@
 const auctions = require('../controllers/auction.server.controller');
+const api_base = '/api/v1';
 
 module.exports = function(app) {
-    app.route('/auctions')
+    app.route(api_base + '/auctions')
         .get(auctions.list)
         .post(auctions.create);
 
-    app.route('/auctions/:id')
+    app.route(api_base + '/auctions/:id')
         .get(auctions.view)
         .patch(auctions.edit);
 };

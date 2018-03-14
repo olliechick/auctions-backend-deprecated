@@ -36,6 +36,19 @@ function isValidDate(dateString) {
     return validNumbers && validDashes && dateString.length === 9;
 }
 
+
+/**
+ * Converts a unix timestamp (in seconds) into a string of the form yyyy-mm-dd hh:MM:ss (e.g. 2018-02-14 00:00:00)
+ * @param unixTimeSeconds unix timestamp in seconds
+ * @return {string} timestamp in form yyyy-mm-dd hh:MM:ss
+ */
+function UnixTimeSecondsToDatetimeString(unixTimeSeconds) {
+    let unixTimeMilliseconds = unixTimeSeconds * 1000;
+    let datetime = new Date(unixTimeMilliseconds);
+    let isoString = datetime.toISOString();
+    return isoString.slice(0, 10) + " " + isoString.slice(11, 19);
+}
+
 /**
  * Returns true if the passed in value is a positive integer.
  *
@@ -60,7 +73,45 @@ function arePositiveIntegers(ints) {
 }
 
 exports.list = function (req, res) {
-    Auction.getAll(function (result) {
+    console.log(req.query, req.params);
+    let startIndex, count, q, categoryid, seller, bidder, winner;
+    for (let p in req.query) {
+        let value = req.query[p];
+        switch(p.ha) {
+            case "startIndex":
+                startIndex = value;
+                break;
+            case "count":
+                count = value;
+                break;
+            case "q":
+                q = value;
+                break;
+            case "category-id":
+                categoryid = value;
+                break;
+            case "seller":
+                seller = value;
+                break;
+            case "bidder":
+                bidder = value;
+                break;
+            case "winner":
+                winner = value;
+                break;
+        }
+    }
+    let values = [
+        startIndex,
+        count,
+        q,
+        categoryid,
+        seller,
+        bidder,
+        winner
+    ];
+    console.log(values);
+    Auction.getAll(values, function (result) {
         res.statusCode = 200;
         res.statusMessage = "OK";
         res.json(result);
@@ -80,49 +131,59 @@ exports.create = function (req, res) {
         "userid": req.body.userid //TODO: use currently-logged-in user's userid here instead of getting it as part of request
     };
 
-    //TODO: check if not logged in
+    //TODO: check if authorised
+    let userid = auction_data['userid'];
     /*
-    if (not logged in) {
-        // user isn't logged in
+    if (authorised) {
+        let userid = USER_ID;
+    } else {
         res.statusCode = 401;
         res.statusMessage = "Unauthorized";
-    } else
+        res.send();
+    }
      */
-    if (!arePositiveIntegers([auction_data["categoryid"]/*, auction_data["reserveprice"], auction_data["startingprice"],
-            auction_data["startingdate"], auction_data["endingdate"]*/])) {
-        //TODO: currently the commented out stuff should be ints according to the spec, but are decimals/datetimes in the DB. Austen will
-        //TODO: confirm what is happening here soon.
+
+    if (!arePositiveIntegers([auction_data["categoryid"], auction_data["reserveprice"], auction_data["startingprice"],
+            auction_data["startingdate"], auction_data["endingdate"]])) {
         // malformed data
         res.statusCode = 400;
         res.statusMessage = "Malformed auction data";
-        res.json({"Error": "Malformed auction data"});
+        res.send();
     } else {
         // valid data
         res.statusCode = 201;
         res.statusMessage = "OK";
 
+        //Convert integers to decimal or datetime, in order to store it in the DB
+        let reserveprice = auction_data["reserveprice"]/100;
+        let startingprice = auction_data["startingprice"]/100;
+        let startingdate = UnixTimeSecondsToDatetimeString(auction_data["startingdate"]);
+        let endingdate = UnixTimeSecondsToDatetimeString(auction_data["endingdate"]);
+
         let values = [
             [auction_data['title'].toString()],
             [auction_data['categoryid'].toString()],
             [auction_data['description'].toString()],
-            [auction_data['reserveprice'].toString()],
-            [auction_data['startingprice'].toString()],
+            [reserveprice.toString()],
+            [startingprice.toString()],
             [auction_data['creationdate'].toString()],
-            [auction_data['startingdate'].toString()],
-            [auction_data['endingdate'].toString()],
-            [auction_data['userid'].toString()]
+            [startingdate.toString()],
+            [endingdate.toString()],
+            [userid.toString()]
         ];
 
-        Auction.insert(values, function (result) {
+        Auction.insert(values, function (err, result) {
 
-            if (result === err) {
-                res.statusCode = 400;
-                res.statusMessage = "Not found";
+            if (err === true) {
+                console.log(result);
+                res.statusCode = 500;
+                res.statusMessage = "Internal server error";
+                res.send();
             } else {
                 res.statusCode = 201;
                 res.statusMessage = "OK";
+                res.json(result);
             }
-            res.json(result);
         });
     }
 };
@@ -133,11 +194,12 @@ exports.view = function (req, res) {
         if (result.length === 0) {
             res.statusCode = 400;
             res.statusMessage = "Not found";
+            res.send();
         } else {
             res.statusCode = 200;
             res.statusMessage = "OK";
+            res.json(result);
         }
-        res.json(result);
     });
 };
 
