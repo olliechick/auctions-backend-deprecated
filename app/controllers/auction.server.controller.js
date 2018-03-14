@@ -61,6 +61,8 @@ function arePositiveIntegers(ints) {
 
 exports.list = function (req, res) {
     Auction.getAll(function (result) {
+        res.statusCode = 200;
+        res.statusMessage = "OK";
         res.json(result);
     });
 };
@@ -88,11 +90,11 @@ exports.create = function (req, res) {
      */
     if (!arePositiveIntegers([auction_data["categoryid"]/*, auction_data["reserveprice"], auction_data["startingprice"],
             auction_data["startingdate"], auction_data["endingdate"]*/])) {
+        //TODO: currently the commented out stuff should be ints according to the spec, but are decimals/datetimes in the DB. Austen will
+        //TODO: confirm what is happening here soon.
         // malformed data
         res.statusCode = 400;
         res.statusMessage = "Malformed auction data";
-        //TODO: currently the commented out stuff should be ints according to the spec, but are decimals/datetimes in the DB. Austen will
-        //TODO: confirm what is happening here soon.
         res.json({"Error": "Malformed auction data"});
     } else {
         // valid data
@@ -112,14 +114,14 @@ exports.create = function (req, res) {
         ];
 
         Auction.insert(values, function (result) {
-            /*
-                    if (result === err) {
-                        res.statusCode = 400;
-                        res.statusMessage = "Not found";
-                    } else {
-                        res.statusCode = 201;
-                        res.statusMessage = "OK";
-                    }*/
+
+            if (result === err) {
+                res.statusCode = 400;
+                res.statusMessage = "Not found";
+            } else {
+                res.statusCode = 201;
+                res.statusMessage = "OK";
+            }
             res.json(result);
         });
     }
