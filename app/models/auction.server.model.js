@@ -1,11 +1,14 @@
 const db = require('../../config/db');
 
 exports.getOne = function (id, done) {
-    let queryString = "SELECT auction.*, category_title, user_username " +
+    let queryString = "SELECT auction.*, bid.*, category_title, seller.user_username as seller_username, buyer.user_username as buyer_username " +
         "FROM auction " +
         "JOIN category ON auction_categoryid = category_id " +
-        "JOIN auction_user ON auction_userid = user_id " +
-        "WHERE auction_id = 3";
+        "JOIN auction_user as seller ON auction_userid = user_id " +
+        "JOIN bid ON auction_id = bid_auctionid " +
+        "JOIN auction_user as buyer on bid_userid = buyer.user_id " +
+        "WHERE auction_id = ? " +
+        "ORDER BY bid_datetime DESC"; //so the most recent bid is first
     db.get_pool().query(queryString, [id], function(err, rows) {
         if (err) return done({"ERROR": "Error selecting"});
         return done(rows);
@@ -69,7 +72,6 @@ exports.getAll = function (values, done) {
         }
     }
 
-    console.log(queryString);
     db.get_pool().query(queryString, function (err, rows) {
         if (err) return done({"ERROR": "Error selecting"});
         return done(rows);
@@ -77,9 +79,10 @@ exports.getAll = function (values, done) {
 };
 
 exports.insert = function (values, done) {
+    let numberOfValues = 9;
     let queryString = "INSERT INTO auction(auction_title, auction_categoryid, auction_description, " +
         "auction_reserveprice, auction_startingprice, auction_creationdate, auction_startingdate, auction_endingdate, " +
-        "auction_userid) VALUES (?" + ", ?".repeat(9-1) + ")";
+        "auction_userid) VALUES (?" + ", ?".repeat(numberOfValues-1) + ")";
     db.get_pool().query(queryString, values, function (err, result) {
         if (err) return done(true, err);
         return done(false, result);

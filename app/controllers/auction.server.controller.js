@@ -1,22 +1,7 @@
 const Auction = require('../models/auction.server.model');
 
 function getCurrentDate() {
-    let today = new Date();
-    let dd = today.getDate();
-    let mm = today.getMonth() + 1; //January is 0!
-    let yyyy = today.getFullYear();
-
-
-    if (dd < 10) {
-        dd = '0' + dd
-    }
-
-    if (mm < 10) {
-        mm = '0' + mm
-    }
-
-    today = yyyy + "-" + mm + '-' + dd;
-    return today;
+    return UnixTimeSecondsToDatetimeString(new Date()/1000);
 }
 
 /**
@@ -37,34 +22,41 @@ function isValidDate(dateString) {
 }
 
 function createAuctionJson(result) {
-    console.log(result);
-    let json = JSON.parse(JSON.stringify(result))[0];
-    console.log(json["auction_endingdate"]);
-    console.log();
-    return [{
-        "categoryId": json["auction_categoryid"],
-        "categoryTitle": json["category_title"],
-        "title": json["auction_title"],
-        "reservePrice": json["auction_reserveprice"],
-        "startDateTime": DatetimeStringToUnixTimeSeconds(json["auction_startingdate"]),
-        "endDateTime": DatetimeStringToUnixTimeSeconds(json["auction_endingdate"]),
-        "description": json["auction_description"],
-        "creationDateTime": + DatetimeStringToUnixTimeSeconds(json["auction_creationdate"]),
-        "seller": {
-            "id": json["auction_userid"],
-            "username": json["user_username"]
-          },
-          "startingBid": json["auction_startingprice"]*100,
-          "currentBid": 0/*json["currentbid"]*/,
-          "bids": [
-            {
-              "amount": 0,
-              "datetime": 0,
-              "buyerId": 0,
-              "buyerUsername": "string"
-            }
-          ]
-        }];
+    let jsonAuctions = JSON.parse(JSON.stringify(result));
+    let json = jsonAuctions[0];
+
+    let auction = {};
+    auction.categoryId = json["auction_categoryid"];
+    auction.categoryTitle = json["category_title"];
+    auction.title = json["auction_title"];
+    auction.reservePrice = json["auction_reserveprice"];
+    auction.startDateTime = DatetimeStringToUnixTimeSeconds(json["auction_startingdate"]);
+    auction.endDateTime = DatetimeStringToUnixTimeSeconds(json["auction_endingdate"]);
+    auction.description = json["auction_description"];
+    auction.creationDateTime = DatetimeStringToUnixTimeSeconds(json["auction_creationdate"]);
+
+    let seller = {};
+    seller.id = json["auction_userid"];
+    seller.username = json["seller_username"];
+    auction.seller = seller;
+
+    auction.startingBid = json["auction_startingprice"] * 100;
+    auction.currentBid = jsonAuctions[0]["bid_amount"];
+
+    let bids = [];
+    let bid;
+    for (let i = 0; i < jsonAuctions.length; i++) {
+        json = jsonAuctions[i];
+        bid = {};
+        bid.amount = json["bid_amount"];
+        bid.datetime = DatetimeStringToUnixTimeSeconds(json["bid_datetime"]);
+        bid.buyerId = json["bid_userid"];
+        bid.username = json["buyer_username"];
+        bids.push(bid);
+    }
+    auction.bids = bids;
+
+    return JSON.parse(JSON.stringify(auction));
 }
 
 /**
@@ -85,7 +77,7 @@ function UnixTimeSecondsToDatetimeString(unixTimeSeconds) {
  * @return {int} unix timestamp (in seconds)
  */
 function DatetimeStringToUnixTimeSeconds(datetimeString) {
-    return Date.parse(datetimeString)/1000;
+    return Date.parse(datetimeString) / 1000;
 }
 
 /**
@@ -112,11 +104,10 @@ function arePositiveIntegers(ints) {
 }
 
 exports.list = function (req, res) {
-    console.log(req.query, req.params);
     let startIndex, count, q, categoryid, seller, bidder, winner;
     for (let p in req.query) {
         let value = req.query[p];
-        switch(p) {
+        switch (p) {
             case "startIndex":
                 startIndex = value;
                 break;
@@ -149,7 +140,6 @@ exports.list = function (req, res) {
         bidder,
         winner
     ];
-    console.log(values);
     Auction.getAll(values, function (result) {
         res.statusCode = 200;
         res.statusMessage = "OK";
@@ -194,8 +184,8 @@ exports.create = function (req, res) {
         res.statusMessage = "OK";
 
         //Convert integers to decimal or datetime, in order to store it in the DB
-        let reserveprice = auction_data["reserveprice"]/100;
-        let startingprice = auction_data["startingprice"]/100;
+        let reserveprice = auction_data["reserveprice"] / 100;
+        let startingprice = auction_data["startingprice"] / 100;
         let startingdate = UnixTimeSecondsToDatetimeString(auction_data["startingdate"]);
         let endingdate = UnixTimeSecondsToDatetimeString(auction_data["endingdate"]);
 
@@ -206,15 +196,14 @@ exports.create = function (req, res) {
             [reserveprice.toString()],
             [startingprice.toString()],
             [auction_data['creationdate'].toString()],
-            [startingdate.toString()],
-            [endingdate.toString()],
+            [startingdate],
+            [endingdate],
             [userid.toString()]
         ];
 
         Auction.insert(values, function (err, result) {
 
             if (err === true) {
-                console.log(result);
                 res.statusCode = 500;
                 res.statusMessage = "Internal server error";
                 res.send();
@@ -230,7 +219,11 @@ exports.create = function (req, res) {
 exports.view = function (req, res) {
     let id = req.params.id;
     Auction.getOne(id, function (result) {
-        if (result.length === 0) {
+        if (result["ERROR"] === "Error selecting") {
+            res.statusCode = 500;
+            res.statusMessage = "Internal server error";
+            res.send();
+        } else if (result.length === 0) {
             res.statusCode = 400;
             res.statusMessage = "Not found";
             res.send();
