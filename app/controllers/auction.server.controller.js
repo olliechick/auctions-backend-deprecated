@@ -36,6 +36,36 @@ function isValidDate(dateString) {
     return validNumbers && validDashes && dateString.length === 9;
 }
 
+function createAuctionJson(result) {
+    console.log(result);
+    let json = JSON.parse(JSON.stringify(result))[0];
+    console.log(json["auction_endingdate"]);
+    console.log();
+    return [{
+        "categoryId": json["auction_categoryid"],
+        "categoryTitle": json["category_title"],
+        "title": json["auction_title"],
+        "reservePrice": json["auction_reserveprice"],
+        "startDateTime": DatetimeStringToUnixTimeSeconds(json["auction_startingdate"]),
+        "endDateTime": DatetimeStringToUnixTimeSeconds(json["auction_endingdate"]),
+        "description": json["auction_description"],
+        "creationDateTime": + DatetimeStringToUnixTimeSeconds(json["auction_creationdate"]),
+        "seller": {
+            "id": json["auction_userid"],
+            "username": json["user_username"]
+          },
+          "startingBid": json["auction_startingprice"]*100,
+          "currentBid": 0/*json["currentbid"]*/,
+          "bids": [
+            {
+              "amount": 0,
+              "datetime": 0,
+              "buyerId": 0,
+              "buyerUsername": "string"
+            }
+          ]
+        }];
+}
 
 /**
  * Converts a unix timestamp (in seconds) into a string of the form yyyy-mm-dd hh:MM:ss (e.g. 2018-02-14 00:00:00)
@@ -47,6 +77,15 @@ function UnixTimeSecondsToDatetimeString(unixTimeSeconds) {
     let datetime = new Date(unixTimeMilliseconds);
     let isoString = datetime.toISOString();
     return isoString.slice(0, 10) + " " + isoString.slice(11, 19);
+}
+
+/**
+ * Converts a string of the form yyyy-mm-dd hh:MM:ss (e.g. 2018-02-14 00:00:00) into a unix timestamp (in seconds)
+ * @param datetimeString a string of the form yyyy-mm-dd hh:MM:ss
+ * @return {int} unix timestamp (in seconds)
+ */
+function DatetimeStringToUnixTimeSeconds(datetimeString) {
+    return Date.parse(datetimeString)/1000;
 }
 
 /**
@@ -198,7 +237,7 @@ exports.view = function (req, res) {
         } else {
             res.statusCode = 200;
             res.statusMessage = "OK";
-            res.json(result);
+            res.json(createAuctionJson(result));
         }
     });
 };
