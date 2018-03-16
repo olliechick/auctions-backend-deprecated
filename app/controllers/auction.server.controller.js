@@ -77,7 +77,7 @@ exports.list = function (req, res) {
     let startIndex, count, q, categoryid, seller, bidder, winner;
     for (let p in req.query) {
         let value = req.query[p];
-        switch(p.ha) {
+        switch(p) {
             case "startIndex":
                 startIndex = value;
                 break;

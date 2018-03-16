@@ -1,6 +1,6 @@
 const db = require('../../config/db');
 
-exports.getOne = function (values, done) {
+exports.getOne = function (id, done) {
     let queryString = "SELECT * FROM auction WHERE auction_id = ?";
     db.get_pool().query(queryString, [id], function(err, rows) {
         if (err) return done({"ERROR": "Error selecting"});
