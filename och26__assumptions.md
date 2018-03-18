@@ -13,11 +13,6 @@ Hence, there is no set of parameters that is invalid.
 * 401: Any user can view an auction, whether or not they are logged in.
 Hence, they do not need to be authorised.
 
-### PATCH /auctions/{id}
-* 400: If the user provides an empty JSON, then it does nothing, but as there are no compulsory fields, this is allowed by the spec.
-Any keys in the JSON not defined in the spec are ignored.
-Hence, there is no JSON that is invalid.
-
 ## photos
 
 ## users
