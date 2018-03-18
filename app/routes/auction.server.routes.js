@@ -9,4 +9,8 @@ module.exports = function(app) {
     app.route(api_base + '/auctions/:id')
         .get(auctions.view)
         .patch(auctions.edit);
+
+    app.route(api_base + '/auctions/:id/bids')
+        .get(auctions.getBids)
+        /*.post(auctions.addBid)*/;
 };
