@@ -299,6 +299,40 @@
 			"response": []
 		},
 		{
+			"name": "Create auction invalid category 400",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"categoryId\": 4564561,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"startDateTime\": 0,\n  \"endDateTime\": 0,\n  \"reservePrice\": 0,\n  \"startingBid\": 0,\n  \"userid\": 1\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
 			"name": "Get auction 200",
 			"request": {
 				"method": "GET",
@@ -426,7 +460,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"categoryId\": 0,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"startingBid\": 0\n}"
+					"raw": "{\n  \"categoryId\": 1,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"startingBid\": 0\n}"
 				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/2",
@@ -461,7 +495,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"categoryId\": 0,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"startDateTime\": 0,\n  \"endDateTime\": 0,\n  \"reservePrice\": 0,\n  \"startingBid\": 0\n}"
+					"raw": "{\n  \"categoryId\": 1,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"startDateTime\": 0,\n  \"endDateTime\": 0,\n  \"reservePrice\": 0,\n  \"startingBid\": 0\n}"
 				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/2",
@@ -520,6 +554,41 @@
 			"response": []
 		},
 		{
+			"name": "Edit auction invalid category 400",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"categoryId\": 0,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"startingBid\": 0\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"2"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
 			"name": "Edit auction 403",
 			"request": {
 				"method": "PATCH",
@@ -531,7 +600,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"categoryId\": 0,\n}"
+					"raw": "{\n  \"title\": \"pen\"\n}"
 				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/1",
@@ -745,10 +814,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"categoryId\": 1,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"startDateTime\": 0,\n  \"endDateTime\": 0,\n  \"reservePrice\": 0,\n  \"startingBid\": 0,\n  \"userid\": 1\n}"
+					"raw": ""
 				},
 				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/auctions",
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/1/bids?amount=500",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -760,7 +829,16 @@
 					"path": [
 						"api",
 						"v1",
-						"auctions"
+						"auctions",
+						"1",
+						"bids"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "500",
+							"equals": true
+						}
 					]
 				},
 				"description": ""
