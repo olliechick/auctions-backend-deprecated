@@ -1,3 +1,5 @@
+I assume that any JSON sent in the body will be valid JSON, that is, in the form `{"key": "value"}`, not something like `7`, `random text`, or `{"""""":::"##$"}`.
+
 # Response codes
 
 I assume that the following response codes mentioned in the spec have no reason to be returned.
