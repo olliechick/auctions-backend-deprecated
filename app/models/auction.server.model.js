@@ -1,10 +1,6 @@
 const db = require('../../config/db');
-const ERROR_SELECTING = "Error selecting";
-const ERROR_AUCTION_DOES_NOT_EXIST = "Auction does not exist";
-const ERROR_BIDDING = "Bidding has already started";
-const ERROR_NO_FIELDS = "No fields to update";
-const ERROR_NAN = "Not a number";
-const ERROR_NO_BIDS = "The auction has not bids.";
+const errors = require('./errors');
+const logic = require('./logic');
 
 exports.getOne = function (id, done) {
     let queryString = "SELECT auction.*, bid.*, category_title, seller.user_username as seller_username, buyer.user_username as buyer_username " +
@@ -16,13 +12,12 @@ exports.getOne = function (id, done) {
         "WHERE auction_id = ? " +
         "ORDER BY bid_datetime DESC"; //so the most recent bid is first
 
-    console.log(queryString);
-    if (isNaN(id)) return done({"ERROR": ERROR_NAN});
+    if (isNaN(id)) return done({"ERROR": errors.ERROR_NAN});
 
     db.get_pool().query(queryString, [id], function (err, rows) {
-        if (err) return done({"ERROR": ERROR_SELECTING});
+        if (err) return done({"ERROR": errors.ERROR_SELECTING});
         else if (rows.length === 0) {
-            return done({"ERROR": ERROR_AUCTION_DOES_NOT_EXIST});
+            return done({"ERROR": errors.ERROR_AUCTION_DOES_NOT_EXIST});
         }
         return done(rows);
     });
@@ -31,6 +26,7 @@ exports.getOne = function (id, done) {
 exports.getAll = function (values, done) {
     let startIndex, count, q, categoryid, seller, bidder, winner;
     [startIndex, count, q, categoryid, seller, bidder, winner] = values;
+    let nonNullValues = [];
 //TODO replace +ing user input with ?s
     // Build query based on parameters
     let queryString = "SELECT auction.* FROM auction";
@@ -39,22 +35,29 @@ exports.getAll = function (values, done) {
     let whereQueries = false; // used to check if the keyword WHERE has already been inserted
 
     if (bidder != null) {
+        if (isNaN(categoryid)) {
+            return done({"ERROR": errors.ERROR_NAN});
+        }
         whereQueries = true;
         queryString += " WHERE auction_id in (" +
             "    SELECT auction_id" +
             "    FROM auction AS a2" +
             "    JOIN bid ON a2.auction_id = bid_auctionid" +
-            "    WHERE bid_userid = '" + bidder + "'" +
+            "    WHERE bid_userid = ?" +
             ")";
-        /*queryString += " JOIN bid as b ON auction_id = b.bid_auctionid";*/
+        nonNullValues.push(parseInt(bidder));
     }
+
     if (winner != null) {
-        whereQueries = true;
+        if (isNaN(categoryid)) {
+            return done({"ERROR": errors.ERROR_NAN});
+        }
         if (whereQueries) {
             queryString += " AND";
         } else {
             queryString += " WHERE";
         }
+        whereQueries = true;
         queryString += " auction_id in (" +
             "   SELECT a2.auction_id" +
             "   FROM auction as a2" +
@@ -65,28 +68,37 @@ exports.getAll = function (values, done) {
             "       WHERE b2.bid_auctionid = a2.auction_id" +
             "       AND b2.bid_amount >= a2.auction_reserveprice" +
             "   )" +
-            "   AND bid_userid = '" + winner + "'" +
+            "   AND bid_userid = ?" +
             ")";
-
+        nonNullValues.push(parseInt(winner));
     }
+
     if (categoryid != null) {
-        whereQueries = true;
+        if (isNaN(categoryid)) {
+            return done({"ERROR": errors.ERROR_NAN});
+        }
         if (whereQueries) {
             queryString += " AND";
         } else {
             queryString += " WHERE";
         }
-        queryString += "  auction_categoryid = '" + categoryid + "'";
+        whereQueries = true;
+        queryString += " auction_categoryid = ?";
+        nonNullValues.push(parseInt(categoryid));
     }
 
     if (seller != null) {
-        whereQueries = true;
+        if (isNaN(seller)) {
+            return done({"ERROR": errors.ERROR_NAN});
+        }
         if (whereQueries) {
             queryString += " AND";
         } else {
             queryString += " WHERE";
         }
-        queryString += " auction_userid = '" + seller + "'";
+        whereQueries = true;
+        queryString += " auction_userid = ?";
+        nonNullValues.push(parseInt(seller));
     }
 
     if (q != null) {
@@ -95,33 +107,67 @@ exports.getAll = function (values, done) {
         } else {
             queryString += " WHERE";
         }
-        queryString += " auction_title LIKE '%" + q + "%'";
+        queryString += " auction_title LIKE ?";
+        nonNullValues.push("%" + q + "%");
     }
 
     // Limit
     if (count != null) {
-        queryString += " LIMIT " + count;
+        if (isNaN(count)) {
+            return done({"ERROR": errors.ERROR_NAN});
+        }
+        queryString += " LIMIT ?";
+        nonNullValues.push(parseInt(count));
         if (startIndex != null) {
-            queryString += " OFFSET " + startIndex;
+            if (isNaN(startIndex)) {
+                return done({"ERROR": errors.ERROR_NAN});
+            }
+            queryString += " OFFSET ?";
+            nonNullValues.push(parseInt(startIndex));
         }
     }
 
-    console.log(queryString);
-    db.get_pool().query(queryString, function (err, rows) {
-        if (err) return done({"ERROR": ERROR_SELECTING});
+    db.get_pool().query(queryString, nonNullValues, function (err, rows) {
+        if (err) return done({"ERROR": errors.ERROR_SELECTING});
         return done(rows);
     });
 };
 
 exports.insert = function (values, done) {
-    let numberOfValues = 9;
-    let queryString = "INSERT INTO auction(auction_title, auction_categoryid, auction_description, " +
-        "auction_reserveprice, auction_startingprice, auction_creationdate, auction_startingdate, auction_endingdate, " +
-        "auction_userid) VALUES (?" + ", ?".repeat(numberOfValues - 1) + ")";
-    db.get_pool().query(queryString, values, function (err, result) {
-        if (err) return done({"ERROR": ERROR_SELECTING});
-        return done(result);
+
+
+    // Check the category id is valid
+    let promise = new Promise(function (resolve, reject) {
+        db.get_pool().query("SELECT * FROM category WHERE category_id = ?", [values[1]], function (err, rows) {
+            if (err) reject(errors.ERROR_SELECTING);
+            else if (rows.length === 0) {
+                reject(errors.ERROR_BAD_REQUEST);
+            }
+        });
+
+    }).catch(function (err) {
+        return (done({"ERROR": err}));
     });
+
+    // (Attempt to) create auction
+    new Promise(function (resolve, reject) {
+        let numberOfValues = 9;
+        let queryString = "INSERT INTO auction(auction_title, auction_categoryid, auction_description, " +
+            "auction_reserveprice, auction_startingprice, auction_creationdate, auction_startingdate, auction_endingdate, " +
+            "auction_userid) VALUES (?" + ", ?".repeat(numberOfValues - 1) + ")";
+        db.get_pool().query(queryString, values, function (err, result) {
+            if (err) reject(errors.ERROR_SELECTING);
+            resolve(result);
+        });
+
+    }).then(function (result) {
+        return done(result);
+
+    }).catch(function (err) {
+        return (done({"ERROR": err}));
+    });
+
+
 };
 
 /**
@@ -188,11 +234,11 @@ exports.alter = function (values, done) {
     // Check the auction exists
     new Promise(function (resolve, reject) {
         db.get_pool().query("SELECT * FROM auction WHERE auction_id = ?", [id], function (err, rows) {
-            if (err) reject(ERROR_SELECTING);
+            if (err) reject(errors.ERROR_SELECTING);
             else if (rows.length === 0) {
-                reject(ERROR_AUCTION_DOES_NOT_EXIST);
+                reject(errors.ERROR_AUCTION_DOES_NOT_EXIST);
             } else if (rows.length > 1) {
-                reject(ERROR_SELECTING); //somehow, there are multiple auctions with the same id
+                reject(errors.ERROR_SELECTING); //somehow, there are multiple auctions with the same id
             } else {
                 resolve();
             }
@@ -202,12 +248,27 @@ exports.alter = function (values, done) {
         return (done({"ERROR": err}));
     });
 
+    // Check the category id is valid
+    if (categoryId != null) {
+        new Promise(function (resolve, reject) {
+            db.get_pool().query("SELECT * FROM category WHERE category_id = ?", [categoryId], function (err, rows) {
+                if (err) reject(errors.ERROR_SELECTING);
+                else if (rows.length === 0) {
+                    reject(errors.ERROR_BAD_REQUEST);
+                }
+            });
+
+        }).catch(function (err) {
+            return (done({"ERROR": err}));
+        });
+    }
+
     // Check there are no bids
     new Promise(function (resolve, reject) {
         db.get_pool().query("SELECT * FROM bid WHERE bid_auctionid = ?", [id], function (err, rows) {
-            if (err) reject(ERROR_SELECTING);
+            if (err) reject(errors.ERROR_SELECTING);
             else if (rows.length >= 1) {
-                reject(ERROR_BIDDING);
+                reject(errors.ERROR_BIDDING);
             }
         });
 
@@ -218,12 +279,12 @@ exports.alter = function (values, done) {
     // Update the auction
     new Promise(function (resolve, reject) {
         if (nonNullValues.length === 0) {
-            reject(ERROR_NO_FIELDS);
+            reject(errors.ERROR_NO_FIELDS);
         }
         nonNullValues.push(id);
 
         db.get_pool().query(queryString, nonNullValues, function (err, result) {
-            if (err) reject(ERROR_SELECTING);
+            if (err) reject(errors.ERROR_SELECTING);
             resolve(result);
         });
 
@@ -240,17 +301,69 @@ exports.getBids = function (id, done) {
     let queryString = "SELECT bid.*, user_username AS buyer_username " +
         "FROM bid " +
         "RIGHT OUTER JOIN auction ON auction_id = bid_auctionid " +
-        "JOIN auction_user ON user_id = bid_userid " +
+        "LEFT OUTER JOIN auction_user ON user_id = bid_userid " +
         "WHERE auction_id = ?";
-    if (isNaN(id)) return done({"ERROR": ERROR_NAN});
+
+    if (isNaN(id)) return done({"ERROR": errors.ERROR_NAN});
 
     db.get_pool().query(queryString, [id], function (err, rows) {
-        if (err) return done({"ERROR": ERROR_SELECTING});
-        else if (rows.length === 0) {
-            return done({"ERROR": ERROR_AUCTION_DOES_NOT_EXIST});
-        }
+        if (err) return done({"ERROR": errors.ERROR_SELECTING});
+
+        else if (rows.length === 0) return done({"ERROR": errors.ERROR_AUCTION_DOES_NOT_EXIST});
+
         else if (rows[0]["bid_id"] === null) return done([]);
+
         return done(rows);
     });
 };
+
+/*
+ * TODO Check for:
+ *     the auction exists (or 404)
+ *     the auction doesn't belong to the buyer (or 400)
+ *     the auction has started (or 400)
+ *     the auction hasn't expired (or 400)
+ *     the amount is higher than the current highest bid (or 400)
+ */
+exports.addBid = function (values, done) {
+    let auction_id, amount, buyer_id;
+    [auction_id, amount, buyer_id] = values;
+
+    // Check the auction exists
+    new Promise(function (resolve, reject) {
+        db.get_pool().query("SELECT * from auction where auction_id = ?", [auction_id], function (err, rows) {
+            if (err) return done({"ERROR": errors.ERROR_SELECTING});
+            else if (rows.length === 0){
+                return done({"ERROR": errors.ERROR_AUCTION_DOES_NOT_EXIST});
+            } else if (rows.length > 1) {
+                return done({"ERROR": errors.ERROR_SELECTING}); // multiple auctions with same id - panic!
+            }
+        });
+    });
+
+    // Check the auction doesn't belong to the buyer, and that the current datetime is between the start and end
+    new Promise(function (resolve, reject) {
+        let queryString = "SELECT * FROM auction WHERE auction_id = ? AND auction_";
+        getCurrentDate();
+        db.get_pool().query(queryString, [auction_id, buyer_id], function (err, rows) {
+            if (err) return done({"ERROR": errors.ERROR_SELECTING});
+            else {
+                return done(rows);
+            }
+        });
+    });
+};
+
+/*
+
+exports.NAME = function (values, done) {
+    let queryString = "";
+
+    db.get_pool().query(queryString, values, function (err, rows) {
+        if (err) return done({"ERROR": errors.ERROR_SELECTING});
+        else {
+            return done(rows);
+        }
+    });
+};*/
 

@@ -12,5 +12,5 @@ module.exports = function(app) {
 
     app.route(api_base + '/auctions/:id/bids')
         .get(auctions.getBids)
-        /*.post(auctions.addBid)*/;
+        .post(auctions.addBid);
 };
