@@ -320,22 +320,6 @@ exports.getBids = function (id, done) {
 function insertABid(buyer_id, auction_id, amount) {
     console.log(1);
 
-    // All checks are complete, do the insert.
-    new Promise(function (resolve, reject) {
-        let values = [buyer_id, auction_id, amount, logic.getCurrentDate()];
-        let numberOfValues = values.length;
-        let queryString = "INSERT INTO bid (bid_userid, bid_auctionid, bid_amount, bid_datetime)" +
-            "VALUES (?" + ", ?".repeat(numberOfValues - 1) + ")";
-        console.log(queryString, values);
-        db.get_pool().query(queryString, values, function (err, result) {
-            if (err) reject(errors.ERROR_SELECTING);
-            resolve(result);
-        });
-    }).then(function (result) {
-        return result;
-    }).catch(function (err) {
-        return {"ERROR": err};
-    });
 }
 
 /*
@@ -351,8 +335,11 @@ exports.addBid = function (values, done) {
     [auction_id, amount, buyer_id] = values;
     amount = logic.centsToDollars(amount);
 
+    //TODO make sure that insert ONLY happens if there is no rejection - check out
+    //TODO https://stackoverflow.com/questions/33251935/how-to-resolve-promises-one-after-another
+
     // Check the auction exists
-    new Promise(function (resolve, reject) {
+    let p1 = new Promise(function (resolve, reject) {
         db.get_pool().query("SELECT * from auction where auction_id = ?", [auction_id], function (err, rows) {
             if (err) reject(errors.ERROR_SELECTING);
             else if (rows.length === 0) {
@@ -367,7 +354,7 @@ exports.addBid = function (values, done) {
 
     // Check the auction doesn't belong to the buyer, and
     // that the current datetime is between the start and end
-    new Promise(function (resolve, reject) {
+    let p2 = new Promise(function (resolve, reject) {
         let queryString = "SELECT * FROM auction" +
             " WHERE auction_id = ?" +
             " AND auction_startingdate < '" + logic.getCurrentDate() +
@@ -386,7 +373,7 @@ exports.addBid = function (values, done) {
     });
 
     // Check that amount is greater than the highest current bid
-    new Promise(function (resolve, reject) {
+    let p3 = new Promise(function (resolve, reject) {
         let queryString = "SELECT * FROM auction" +
             " JOIN bid ON auction_id = bid_auctionid" +
             " WHERE auction_id = ?" +
@@ -394,16 +381,34 @@ exports.addBid = function (values, done) {
         let values = [auction_id, amount];
         console.log(queryString, values);
         db.get_pool().query(queryString, values, function (err, rows) {
-            console.log(rows);
+            //console.log(rows);
             if (err) reject(errors.ERROR_SELECTING);
             else if (rows.length > 0) {
+                console.log('rejected');
                 reject(errors.ERROR_BAD_REQUEST);
             }
-            resolve(rows);
+        });
+    }).catch(function (err) {
+        return done({"ERROR": err});
+    });
+
+
+    // All checks are complete, do the insert.
+    new Promise(function (resolve, reject) {
+        console.log(1);
+        let values = [buyer_id, auction_id, amount, logic.getCurrentDate()];
+        let numberOfValues = values.length;
+        let queryString = "INSERT INTO bid (bid_userid, bid_auctionid, bid_amount, bid_datetime)" +
+            "VALUES (?" + ", ?".repeat(numberOfValues - 1) + ")";
+        console.log(queryString, values);
+        console.log();
+        db.get_pool().query(queryString, values, function (err, result) {
+            console.log("Result: " + result.toString());
+            if (err) reject(errors.ERROR_SELECTING);
+            resolve(result);
         });
     }).then(function (result) {
-        console.log(0);
-        return done(insertABid(buyer_id, auction_id, amount));
+        return done(result);
     }).catch(function (err) {
         return done({"ERROR": err});
     });
