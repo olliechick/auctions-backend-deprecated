@@ -1,6 +1,8 @@
 I assume that any JSON sent in the body will be valid JSON.
 That is, in the form `{"key": "value"}`, not something like `7`, `random text`, `{"""""":::"##$"}`, or `{"key": "value" "key": "value"}`.
 
+I also assume that timestamps sent and received in JSONs are in seconds since the Unix epoch (00:00:00 Coordinated Universal Time (UTC), Thursday, 1 January 1970).
+
 # Response codes
 
 I assume that the following response codes mentioned in the spec have no reason to be returned.
