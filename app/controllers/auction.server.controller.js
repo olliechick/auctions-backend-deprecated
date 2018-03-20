@@ -177,8 +177,8 @@ exports.edit = function (req, res) {
     let startingdate;
     let endingdate;
     try {
-        reserveprice = logic.dollarsToCents(auction_data["reserveprice"]);
-        startingprice = logic.dollarsToCents(auction_data["startingprice"]);
+        reserveprice = logic.centsToDollars(auction_data["reserveprice"]);
+        startingprice = logic.centsToDollars(auction_data["startingprice"]);
         startingdate = logic.unixTimeSecondsToDatetimeString(auction_data["startingdate"]);
         endingdate = logic.unixTimeSecondsToDatetimeString(auction_data["endingdate"]);
     } catch (err) {
@@ -264,8 +264,8 @@ exports.getBids = function (req, res) {
  *     the amount is higher than the current highest bid (or 400)
  */
 exports.addBid = function (req, res) {
-    let auction_id = req.params.id;
-    let amount = req.params.amount;
+    let auction_id = parseInt(req.params.id);
+    let amount = parseInt(req.query["amount"]);
 
     //TODO: check if authorised, and get user id
 
@@ -276,15 +276,15 @@ exports.addBid = function (req, res) {
         res.send();
     }
      */
-    if (!logic.arePositiveIntegers(auction_id, amount)) {
+    if (!logic.arePositiveIntegers([auction_id, amount])) {
         res.statusCode = 400;
-        res.statusMessage = "Bad request: auction id or amount aren't positive integers.";
+        res.statusMessage = "Bad request: auction id or amount aren't positive integers." + auction_id  + amount;
         res.send();
     }
 
     let values = [auction_id, amount, buyer_id];
 
-    Auction.getBids(values, function(result) {
+    Auction.addBid(values, function(result) {
         if (result["ERROR"] === errors.ERROR_SELECTING) {
             res.statusCode = 500;
             res.statusMessage = "Internal server error";

@@ -1,5 +1,6 @@
-
-
+/**
+ * Returns the current date and time as a string, in the form yyyy-mm-dd hh:MM:ss
+ */
 exports.getCurrentDate = function() {
     return exports.unixTimeSecondsToDatetimeString(new Date() / 1000);
 };
@@ -95,11 +96,11 @@ exports.datetimeStringToUnixTimeSeconds = function(datetimeString) {
     return Date.parse(datetimeString) / 1000;
 };
 
-exports.dollarsToCents = function(dollars) {
-    if (dollars == null) {
+exports.centsToDollars = function(cents) {
+    if (cents == null) {
         return null;
     }
-    return dollars / 100;
+    return cents / 100;
 };
 
 /**
