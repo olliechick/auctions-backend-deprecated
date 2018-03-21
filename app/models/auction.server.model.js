@@ -436,16 +436,3 @@ exports.addBid = function (values, done) {
     });
 };
 
-/*
-
-exports.NAME = function (values, done) {
-    let queryString = "";
-
-    db.get_pool().query(queryString, values, function (err, rows) {
-        if (err) return done({"ERROR": errors.ERROR_SELECTING});
-        else {
-            return done(rows);
-        }
-    });
-};*/
-

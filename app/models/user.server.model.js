@@ -32,7 +32,7 @@ exports.addUser = function (values, done) {
         }).catch(function (err) {
             throw err;
         });
-    }).then(function(result) {
+    }).then(function (result) {
         return done(result);
     }).catch(function (err) {
         return done({"ERROR": err});
@@ -133,7 +133,111 @@ exports.viewUser = function (values, done) {
             user_json.accountBalance = user["user_accountbalance"];
         }
         console.log(user_json);
-        return(done(user_json));
+        return (done(user_json));
+    });
+};
+
+
+/**
+ * Adds "SET " to the query string if it is the first SET substatement, or ", " if it isn't.
+ * @param firstSet true if this is the first set statement
+ * @param queryString the current query
+ * @returns {*[]} firstSet, queryString
+ */
+function setSeparator(firstSet, queryString) {
+    if (firstSet) {
+        queryString += "SET ";
+        firstSet = false;
+    } else {
+        queryString += ", ";
+    }
+    return [firstSet, queryString];
+}
+
+
+exports.editUser = function (values, done) {
+    console.log(20);
+    let nonNullValues = [];
+    let firstSet = true;
+    let user_id, token, username, givenName, familyName, email, password;
+    [user_id, token, username, givenName, familyName, email, password] = values;
+    let queryString = "UPDATE auction_user ";
+
+    if (username != null) {
+        [firstSet, queryString] = setSeparator(firstSet, queryString);
+        queryString += "user_username = ?";
+        nonNullValues.push(username);
+    }
+    if (givenName != null) {
+        [firstSet, queryString] = setSeparator(firstSet, queryString);
+        queryString += "user_givenname = ?";
+        nonNullValues.push(givenName);
+    }
+    if (familyName != null) {
+        [firstSet, queryString] = setSeparator(firstSet, queryString);
+        queryString += "user_familyname = ?";
+        nonNullValues.push(familyName);
+    }
+    if (email != null) {
+        [firstSet, queryString] = setSeparator(firstSet, queryString);
+        queryString += "user_email = ?";
+        nonNullValues.push(email);
+    }
+    if (password != null) {
+        [firstSet, queryString] = setSeparator(firstSet, queryString);
+        queryString += "user_password = ?";
+        nonNullValues.push(password);
+    }
+
+    queryString += " WHERE user_id = ?";
+    nonNullValues.push(user_id);
+
+    // Check that user exists
+    new Promise(function (resolve, reject) {
+        db.get_pool().query("SELECT * FROM auction_user WHERE user_id = ?", user_id, function (err, rows) {
+            console.log(40);
+            if (err) reject(errors.ERROR_SELECTING);
+            else if(rows.length !== 1) reject(errors.ERROR_UNAUTHORISED);
+            else {
+                // Check they are authorised
+                console.log(user_id === logic.token_user_id, user_id, logic.token_user_id, token === logic.token);
+                if (user_id === logic.token_user_id && token === logic.token) resolve();
+                else reject(errors.ERROR_UNAUTHORISED);
+            }
+        });
+
+        // Check that username and email aren't taken
+    }).then(function () {
+        return new Promise(function (resolve, reject) {
+            //maintain db integrity
+            db.get_pool().query("select * from auction_user where user_username = ? or user_email = ?", [username, email], function (err, rows) {
+                console.log(rows);
+                if (err) reject(errors.ERROR_SELECTING);
+                if (rows.length > 0) {
+                    console.log('e');
+                    reject(errors.ERROR_BAD_REQUEST);
+                } else resolve();
+            });
+        }).catch(function (err) {
+            throw err;
+        });
+
+        // Perform the update
+    }).then(function () {
+        return new Promise(function (resolve, reject) {
+            //maintain db integrity
+            db.get_pool().query(queryString, nonNullValues, function (err, rows) {
+                if (err) reject(errors.ERROR_SELECTING);
+                resolve();
+            });
+        }).catch(function (err) {
+            throw err;
+        });
+
+    }).then(function () {
+        return done(1);
+    }).catch(function (err) {
+        return done({"ERROR": err});
     });
 };
 
@@ -161,4 +265,3 @@ exports.viewUser = function (values, done) {
 exports.NAME = function (values, done) {
 };
 */
-

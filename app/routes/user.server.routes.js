@@ -12,7 +12,7 @@ module.exports = function(app) {
         .post(users.logout);
 
     app.route(api_base + '/users/:id')
-        .get(users.viewUser)/*
-        .patch(users.editUser);*/
+        .get(users.viewUser)
+        .patch(users.editUser);
 
 };

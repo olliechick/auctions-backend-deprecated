@@ -107,9 +107,39 @@ exports.viewUser = function (req, res) {
 };
 
 
-/*
+exports.editUser = function (req, res) {
+    let user_id = parseInt(req.params.id);
+    let token = req.headers["x-api-key"];
+    let values = [
+        user_id,
+        token,
+        req.body.username,
+        req.body.givenName,
+        req.body.familyName,
+        req.body.email,
+        req.body.password
+    ];
 
-exports.NAME = function (req, res) {
-    return null;
+    if (!logic.isPositiveInteger(user_id)) {
+        res.statusCode = 401;
+        res.statusMessage = "unauthorised: user id should be a positive integer";
+        res.send();
+        return;
+    }
+
+    User.editUser(values, function (result) {
+        if (result["ERROR"] === errors.ERROR_SELECTING) {
+            res.statusCode = 500;
+            res.statusMessage = "server error";
+            res.send();
+        } else if (result["ERROR"] === errors.ERROR_UNAUTHORISED || result["ERROR"] === errors.ERROR_BAD_REQUEST) {
+            res.statusCode = 401;
+            res.statusMessage = "unauthorised";
+            res.send();
+        } else {
+            res.statusCode = 201;
+            res.statusMessage = "OK";
+            res.send();
+        }
+    });
 };
-*/

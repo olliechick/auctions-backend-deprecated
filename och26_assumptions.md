@@ -18,4 +18,14 @@ There is no 400 error code in the spec, so a 401 is returned instead.
 
 ## users
 
+### POST /users/login
+* The server does not allow multiple login.
+If a login request is sent while a user is already logged in, a 500 is returned.
+
+### PATCH /users/{id}
+* Users can't change their username or email to one that is already taken.
+There is no 400 error code in the spec, so a 401 is returned instead.
+
+* A 401 is also returned if
+
 ## database

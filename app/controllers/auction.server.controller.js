@@ -80,13 +80,21 @@ exports.create = function (req, res) {
         "userid": userid
     };
 
+    console.log(auction_data["startingdate"]);
+    console.log(new Date().getTime());
+
+    // Check everything is there and dates are valid
     if (!logic.arePositiveIntegers([auction_data["categoryid"], auction_data["reserveprice"], auction_data["startingprice"],
-            auction_data["startingdate"], auction_data["endingdate"]]) || auction_data["title"] === undefined ||
-        auction_data["description"] === undefined) {
+            auction_data["startingdate"], auction_data["endingdate"]])
+        || auction_data["title"] === undefined
+        || auction_data["description"] === undefined
+        || auction_data["startingdate"] < new Date().getTime()
+        || auction_data["startingdate"] > auction_data["endingdate"]) {
         // malformed data
         res.statusCode = 400;
         res.statusMessage = "Malformed auction data";
         res.send();
+        return;
     } else {
         // valid data
 
@@ -273,7 +281,7 @@ exports.addBid = function (req, res) {
 
     let values = [auction_id, amount, token];
 
-    Auction.addBid(values, function(result) {
+    Auction.addBid(values, function (result) {
         if (result["ERROR"] === errors.ERROR_SELECTING) {
             res.statusCode = 500;
             res.statusMessage = "Internal server error";
