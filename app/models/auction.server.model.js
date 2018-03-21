@@ -335,84 +335,85 @@ exports.addBid = function (values, done) {
     [auction_id, amount, buyer_id] = values;
     amount = logic.centsToDollars(amount);
 
-    //TODO make sure that insert ONLY happens if there is no rejection - check out
-    //TODO https://stackoverflow.com/questions/33251935/how-to-resolve-promises-one-after-another
-
     // Check the auction exists
-    let p1 = new Promise(function (resolve, reject) {
+    new Promise(function (resolve, reject) {
         db.get_pool().query("SELECT * from auction where auction_id = ?", [auction_id], function (err, rows) {
             if (err) reject(errors.ERROR_SELECTING);
             else if (rows.length === 0) {
                 reject(errors.ERROR_AUCTION_DOES_NOT_EXIST);
             } else if (rows.length > 1) {
                 reject(errors.ERROR_SELECTING); // multiple auctions with same id - panic!
+            } else {
+                resolve();
             }
         });
-    }).catch(function (err) {
-        return done({"ERROR": err});
-    });
-
-    // Check the auction doesn't belong to the buyer, and
-    // that the current datetime is between the start and end
-    let p2 = new Promise(function (resolve, reject) {
-        let queryString = "SELECT * FROM auction" +
-            " WHERE auction_id = ?" +
-            " AND auction_startingdate < '" + logic.getCurrentDate() +
-            "' AND auction_endingdate > '" + logic.getCurrentDate() +
-            "' AND auction_userid != ?";
-        let values = [auction_id, buyer_id];
-        console.log(queryString, values);
-        db.get_pool().query(queryString, values, function (err, rows) {
-            if (err) reject(errors.ERROR_SELECTING);
-            else if (rows.length === 0) {
-                reject(errors.ERROR_BAD_REQUEST);
-            }
+    }).then(function () {
+        // Check the auction doesn't belong to the buyer, and
+        // that the current datetime is between the start and end
+        return new Promise(function (resolve, reject) {
+            let queryString = "SELECT * FROM auction" +
+                " WHERE auction_id = ?" +
+                " AND auction_startingdate < '" + logic.getCurrentDate() +
+                "' AND auction_endingdate > '" + logic.getCurrentDate() +
+                "' AND auction_userid != ?";
+            let values = [auction_id, buyer_id];
+            db.get_pool().query(queryString, values, function (err, rows) {
+                if (err) reject(errors.ERROR_SELECTING);
+                else if (rows.length === 0) {
+                    reject(errors.ERROR_BAD_REQUEST);
+                }else {
+                    resolve();
+                }
+            });
+        }).catch(function (err) {
+            throw err;
         });
-    }).catch(function (err) {
-        return done({"ERROR": err});
-    });
+    }).then(function () {
 
-    // Check that amount is greater than the highest current bid
-    let p3 = new Promise(function (resolve, reject) {
-        let queryString = "SELECT * FROM auction" +
-            " JOIN bid ON auction_id = bid_auctionid" +
-            " WHERE auction_id = ?" +
-            " AND bid_amount >= ?";
-        let values = [auction_id, amount];
-        console.log(queryString, values);
-        db.get_pool().query(queryString, values, function (err, rows) {
-            //console.log(rows);
-            if (err) reject(errors.ERROR_SELECTING);
-            else if (rows.length > 0) {
-                console.log('rejected');
-                reject(errors.ERROR_BAD_REQUEST);
-            }
+        // Check that amount is greater than the highest current bid
+        return new Promise(function (resolve, reject) {
+            let queryString = "SELECT * FROM auction" +
+                " JOIN bid ON auction_id = bid_auctionid" +
+                " WHERE auction_id = ?" +
+                " AND bid_amount >= ?";
+            let values = [auction_id, amount];
+            db.get_pool().query(queryString, values, function (err, rows) {
+                //console.log(rows);
+                if (err) reject(errors.ERROR_SELECTING);
+                else if (rows.length > 0) {
+                    reject(errors.ERROR_BAD_REQUEST);
+                }else {
+                    resolve();
+                }
+            });
+        }).catch(function (err) {
+            throw err;
         });
-    }).catch(function (err) {
-        return done({"ERROR": err});
-    });
 
-
-    // All checks are complete, do the insert.
-    new Promise(function (resolve, reject) {
-        console.log(1);
-        let values = [buyer_id, auction_id, amount, logic.getCurrentDate()];
-        let numberOfValues = values.length;
-        let queryString = "INSERT INTO bid (bid_userid, bid_auctionid, bid_amount, bid_datetime)" +
-            "VALUES (?" + ", ?".repeat(numberOfValues - 1) + ")";
-        console.log(queryString, values);
-        console.log();
-        db.get_pool().query(queryString, values, function (err, result) {
-            console.log("Result: " + result.toString());
-            if (err) reject(errors.ERROR_SELECTING);
-            resolve(result);
+    }).then(function() {
+        // All checks are complete, do the insert.
+        return new Promise(function (resolve, reject) {
+            let values = [buyer_id, auction_id, amount, logic.getCurrentDate()];
+            let numberOfValues = values.length;
+            let queryString = "INSERT INTO bid (bid_userid, bid_auctionid, bid_amount, bid_datetime)" +
+                "VALUES (?" + ", ?".repeat(numberOfValues - 1) + ")";
+            db.get_pool().query(queryString, values, function (err, result) {
+                if (err) {
+                    reject(errors.ERROR_SELECTING);
+                } else {
+                    resolve(result);
+                }
+            });
+        }).then(function (result) {
+            return result;
+        }).catch(function (err) {
+            throw err;
         });
-    }).then(function (result) {
+    }).then(function(result) {
         return done(result);
     }).catch(function (err) {
         return done({"ERROR": err});
     });
-
 };
 
 /*

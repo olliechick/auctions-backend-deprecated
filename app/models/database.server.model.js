@@ -10,6 +10,8 @@ exports.reset = function (done) {
         if (err) return done(true, err);
         done(false, result);
     });
+
+    //todo delete photos
 };
 
 exports.resample = function (done) {

@@ -93,8 +93,8 @@ exports.create = function (req, res) {
         //Convert integers to decimal or datetime, in order to store it in the DB
         let reserveprice = auction_data["reserveprice"] / 100;
         let startingprice = auction_data["startingprice"] / 100;
-        let startingdate = logic.unixTimeSecondsToDatetimeString(auction_data["startingdate"]);
-        let endingdate = logic.unixTimeSecondsToDatetimeString(auction_data["endingdate"]);
+        let startingdate = logic.unixTimeMillisecondsToDatetimeString(auction_data["startingdate"]);
+        let endingdate = logic.unixTimeMillisecondsToDatetimeString(auction_data["endingdate"]);
 
         let values = [
             [auction_data['title'].toString()],
@@ -179,8 +179,8 @@ exports.edit = function (req, res) {
     try {
         reserveprice = logic.centsToDollars(auction_data["reserveprice"]);
         startingprice = logic.centsToDollars(auction_data["startingprice"]);
-        startingdate = logic.unixTimeSecondsToDatetimeString(auction_data["startingdate"]);
-        endingdate = logic.unixTimeSecondsToDatetimeString(auction_data["endingdate"]);
+        startingdate = logic.unixTimeMillisecondsToDatetimeString(auction_data["startingdate"]);
+        endingdate = logic.unixTimeMillisecondsToDatetimeString(auction_data["endingdate"]);
     } catch (err) {
         res.statusCode = 400;
         res.statusMessage = "Bad request: currency/timestamp";
@@ -278,7 +278,7 @@ exports.addBid = function (req, res) {
      */
     if (!logic.arePositiveIntegers([auction_id, amount])) {
         res.statusCode = 400;
-        res.statusMessage = "Bad request: auction id or amount aren't positive integers." + auction_id  + amount;
+        res.statusMessage = "Bad request: auction id and amount shouold be positive integers.";
         res.send();
     }
 
@@ -295,18 +295,19 @@ exports.addBid = function (req, res) {
             res.send();
         } else if (result["ERROR"] === errors.ERROR_AUCTION_DOES_NOT_EXIST) {
             res.statusCode = 404;
-            res.statusMessage = "Not found";
+            res.statusMessaage = "Not found";
             res.send();
         } else {
             res.statusCode = 201;
             res.statusMessage = "OK";
             res.send();
         }
-    })
+    });
 };
 
 /*
 
 exports.NAME = function (req, res) {
     return null;
-};*/
+};
+*/

@@ -11,6 +11,6 @@ module.exports = function(app) {
         .patch(auctions.edit);
 
     app.route(api_base + '/auctions/:id/bids')
-       // .get(auctions.getBids)
+        .get(auctions.getBids)
         .post(auctions.addBid);
 };
