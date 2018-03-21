@@ -9,6 +9,7 @@ module.exports = function(){
 
     require('../app/routes/auction.server.routes.js')(app);
     require('../app/routes/photo.server.routes.js')(app);
+    require('../app/routes/user.server.routes.js')(app);
     require('../app/routes/database.server.routes.js')(app);
 
     return app;
