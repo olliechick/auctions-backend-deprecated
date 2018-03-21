@@ -10,12 +10,9 @@ exports.showPhoto = function (id, done) {
     }
 
     let filepath = __dirname + "/../../uploads/" + id;
-    //TODO check if png or jpg (or jpeg?)
-
 
     // Check the auction exists
     new Promise(function (resolve, reject) {
-        console.log(1);
         db.get_pool().query("SELECT * from auction where auction_id = ?", [id], function (err, rows) {
             if (err) reject(errors.ERROR_SELECTING);
             else if (rows.length === 0) {
@@ -26,25 +23,13 @@ exports.showPhoto = function (id, done) {
                 resolve();
             }
         });
-        /*
-            }).then(function () {
-
-                return new Promise(function (resolve, reject) {
-
-                }).catch(function (err) {
-                    throw err;
-                });
-        */
     }).then(function () {
-        console.log(2);
         // All checks are complete, get the file.
         return new Promise(function (resolve, reject) {
             fs.readFile(filepath + ".png", function (err, data) {
-                console.log(data);
                 if (err) {
                     if (err.code === 'ENOENT') {
                         fs.readFile(filepath + ".jpeg", function (err, data) {
-                            console.log(data);
                             if (err) {
                                 if (err.code === 'ENOENT') {
                                     fs.readFile(__dirname + "/../../uploads/default.png", function (err, data) {
@@ -93,15 +78,11 @@ exports.showPhoto = function (id, done) {
  *
  */
 function checkIfUserCanManipulateAuction(auction_id, token) {
-    console.log(0);
     return new Promise(function (resolve, reject) {
-        console.log(1);
         // Check the auction exists
         db.get_pool().query("SELECT * from auction where auction_id = ?", [auction_id], function (err, rows) {
-            console.log(1 + ": " + err, rows);
             if (err) reject(errors.ERROR_SELECTING);
             else if (rows.length === 0) {
-                console.log('doesnt esxit');
                 reject(errors.ERROR_AUCTION_DOES_NOT_EXIST);
             } else if (rows.length > 1) {
                 reject(errors.ERROR_SELECTING); // multiple auctions with same id - panic!
@@ -109,20 +90,16 @@ function checkIfUserCanManipulateAuction(auction_id, token) {
                 // Authorise
                 user_id = rows[0]["auction_userid"];
                 if (!(user_id === logic.token_user_id && token === logic.token)) {
-                    console.log('unathd:', user_id, logic.token_user_id, token, logic.token);
                     reject(errors.ERROR_UNAUTHORISED);
                 } else resolve();
             }
         });
     }).then(function () {
-        console.log(3);
-
         return new Promise(function (resolve, reject) {
 
             queryString = "SELECT * FROM auction WHERE auction_id = ? AND auction_startingdate > '" +
                 logic.getCurrentDate() + "'";
             db.get_pool().query(queryString, [auction_id], function (err, rows) {
-                console.log("R: " + rows);
                 if (err) reject(errors.ERROR_SELECTING);
                 else if (rows.length === 0) {
                     reject(errors.ERROR_AUCTION_STARTED);
@@ -132,7 +109,6 @@ function checkIfUserCanManipulateAuction(auction_id, token) {
             });
 
         }).catch(function (err) {
-            console.log("ERR: " + err);
             throw err;
         });
     });
@@ -143,10 +119,8 @@ exports.addPhoto = function (values, done) {
     [auction_id, token] = values;
 
     checkIfUserCanManipulateAuction(auction_id, token).then(function (result) {
-        console.log(900, result);
         return done(result);
     }).catch(function (err) {
-        console.log(800, err);
         return done({"ERROR": err});
     });
 };
@@ -187,7 +161,6 @@ exports.deletePhoto = function (values, done) {
     }).then(function (result) {
         return done(result);
     }).catch(function (err) {
-        console.log(err);
         return done({"ERROR": err});
     });
 

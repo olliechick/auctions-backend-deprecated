@@ -9,7 +9,6 @@ exports.addUser = function (values, done) {
     new Promise(function (resolve, reject) {
         //maintain db integrity
         db.get_pool().query("select * from auction_user where user_username = ? or user_email = ?", [username, email], function (err, rows) {
-            console.log(rows);
             if (err) reject(errors.ERROR_SELECTING);
             if (rows.length > 0) {
                 reject(errors.ERROR_BAD_REQUEST);
@@ -23,7 +22,6 @@ exports.addUser = function (values, done) {
             let queryString = "INSERT INTO auction_user (user_username, user_givenname, user_familyname, user_email, user_password)" +
                 " VALUES (?" + ", ?".repeat(numberOfValues - 1) + ")";
 
-            console.log(queryString, values);
             db.get_pool().query(queryString, values, function (err, result) {
                 if (err) reject(errors.ERROR_SELECTING);
                 resolve(result);
@@ -53,7 +51,6 @@ exports.login = function (values, done) {
 
     let username, email, password;
     [username, email, password] = values;
-    console.log("username, password, email", username, password, email);
 
     new Promise(function (resolve, reject) {
         if (username === undefined) {
@@ -61,7 +58,6 @@ exports.login = function (values, done) {
             let credentials = [email, password];
             let queryString = "SELECT * from auction_user where user_email = ? AND user_password = ?";
             db.get_pool().query(queryString, credentials, function (err, rows) {
-                console.log(queryString, credentials);
                 if (err) reject(errors.ERROR_SELECTING);
                 if (rows.length === 1) {
                     logic.token = "TOK"//TODO reinstate: crypto.randomBytes(32).toString("base64"); //shoutout to jack steel
@@ -75,7 +71,6 @@ exports.login = function (values, done) {
 
         } else {
             // using username
-            //todo implement
             let credentials = [username, password];
             let queryString = "SELECT * from auction_user where user_username = ? AND user_password = ?";
             db.get_pool().query(queryString, credentials, function (err, rows) {
@@ -156,7 +151,6 @@ function setSeparator(firstSet, queryString) {
 
 
 exports.editUser = function (values, done) {
-    console.log(20);
     let nonNullValues = [];
     let firstSet = true;
     let user_id, token, username, givenName, familyName, email, password;
@@ -195,12 +189,10 @@ exports.editUser = function (values, done) {
     // Check that user exists
     new Promise(function (resolve, reject) {
         db.get_pool().query("SELECT * FROM auction_user WHERE user_id = ?", user_id, function (err, rows) {
-            console.log(40);
             if (err) reject(errors.ERROR_SELECTING);
             else if(rows.length !== 1) reject(errors.ERROR_UNAUTHORISED);
             else {
                 // Check they are authorised
-                console.log(user_id === logic.token_user_id, user_id, logic.token_user_id, token === logic.token);
                 if (user_id === logic.token_user_id && token === logic.token) resolve();
                 else reject(errors.ERROR_UNAUTHORISED);
             }
@@ -211,10 +203,8 @@ exports.editUser = function (values, done) {
         return new Promise(function (resolve, reject) {
             //maintain db integrity
             db.get_pool().query("select * from auction_user where user_username = ? or user_email = ?", [username, email], function (err, rows) {
-                console.log(rows);
                 if (err) reject(errors.ERROR_SELECTING);
                 if (rows.length > 0) {
-                    console.log('e');
                     reject(errors.ERROR_BAD_REQUEST);
                 } else resolve();
             });
@@ -240,28 +230,3 @@ exports.editUser = function (values, done) {
         return done({"ERROR": err});
     });
 };
-
-
-/*
-    new Promise(function (resolve, reject) {
-        //async code block
-    }).then(function () {
-
-        return new Promise(function (resolve, reject) {
-            //async code block
-        }).catch(function (err) {
-            throw err;
-        });
-    }).then(function(result) {
-        return done(result);
-    }).catch(function (err) {
-        return done({"ERROR": err});
-    });
-*/
-
-
-/*
-
-exports.NAME = function (values, done) {
-};
-*/

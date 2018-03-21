@@ -22,7 +22,6 @@ exports.showPhoto = function (req, res) {
             res.statusCode = 200;
             res.statusMessage = "OK";
             res.setHeader('content-type', 'image/' + result["filetype"]);
-            console.log(result["data"]);
             res.send(result["data"]);
         }
     });
@@ -34,7 +33,6 @@ exports.addPhoto = function (req, res) {
     let values = [id, token];
 
     Photo.addPhoto(values, function (result) {
-        console.log(result, req.headers['content-type'], );
 
         if (result["ERROR"] === errors.ERROR_UNAUTHORISED) {
             res.statusCode = 401;
@@ -56,7 +54,6 @@ exports.addPhoto = function (req, res) {
                 new Promise(function (resolve, reject) {
                     Photo.deletePhoto(values, function (result) {
                         if (result["ERROR"] === errors.ERROR_ON_SERVER) {
-                            console.log('err del');
                             reject(errors.ERROR_ON_SERVER);
                         } else {
                             resolve();
@@ -82,7 +79,6 @@ exports.addPhoto = function (req, res) {
                 });
 
             } catch (err) {
-                console.log(5000, err);
                 res.statusCode = 500;
                 res.statusMessage = "Internal server error";
                 res.send();
@@ -102,7 +98,6 @@ exports.deletePhoto = function (req, res) {
     let values = [id, token];
 
     Photo.deletePhoto(values, function (result) {
-        console.log(result);
         if (result["ERROR"] === errors.ERROR_UNAUTHORISED) {
             res.statusCode = 401;
             res.statusMessage = "Unauthorised";
