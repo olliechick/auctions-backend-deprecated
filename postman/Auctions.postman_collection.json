@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "Auctions",
-		"_postman_id": "fad2738b-d471-a2b1-2f2d-f6ab59a63cee",
+		"_postman_id": "6143a4ef-379f-4786-8ff2-56e6eaf0556a",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -35,7 +35,8 @@
 						"v1",
 						"reset"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -68,7 +69,8 @@
 						"v1",
 						"resample"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -96,7 +98,8 @@
 						"v1",
 						"auctions"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -161,7 +164,8 @@
 							"equals": true
 						}
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -196,7 +200,8 @@
 							"equals": true
 						}
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -229,7 +234,8 @@
 						"v1",
 						"auctions"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -262,7 +268,8 @@
 						"v1",
 						"auctions"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -295,7 +302,8 @@
 						"v1",
 						"auctions"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -328,7 +336,8 @@
 						"v1",
 						"auctions"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -357,7 +366,8 @@
 						"auctions",
 						"1"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -386,7 +396,8 @@
 						"auctions",
 						"not-an-int"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -415,7 +426,8 @@
 						"auctions",
 						"1589456415748441"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -427,6 +439,10 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "TOK"
 					}
 				],
 				"body": {
@@ -434,7 +450,7 @@
 					"raw": "{}"
 				},
 				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/auctions/2",
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/11",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -447,9 +463,10 @@
 						"api",
 						"v1",
 						"auctions",
-						"2"
+						"11"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -461,6 +478,10 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "TOK"
 					}
 				],
 				"body": {
@@ -468,7 +489,7 @@
 					"raw": "{\n  \"categoryId\": 1,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"startingBid\": 0\n}"
 				},
 				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/auctions/2",
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/11",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -481,9 +502,10 @@
 						"api",
 						"v1",
 						"auctions",
-						"2"
+						"11"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -495,14 +517,18 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "TOK"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"categoryId\": 1,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"startDateTime\": 0,\n  \"endDateTime\": 0,\n  \"reservePrice\": 0,\n  \"startingBid\": 0\n}"
+					"raw": "{\n  \"categoryId\": 1,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"startDateTime\": 10121548421540,\n  \"endDateTime\": 0,\n  \"reservePrice\": 0,\n  \"startingBid\": 0\n}"
 				},
 				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/auctions/2",
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/11",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -515,9 +541,10 @@
 						"api",
 						"v1",
 						"auctions",
-						"2"
+						"11"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -529,6 +556,10 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "TOK"
 					}
 				],
 				"body": {
@@ -536,7 +567,7 @@
 					"raw": "{\n  \"categoryId\": 0,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"startDateTime\": 10000,\n  \"endDateTime\": \"badint\",\n  \"reservePrice\": 1000,\n  \"startingBid\": 1000\n}"
 				},
 				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/auctions/2",
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/11",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -549,9 +580,10 @@
 						"api",
 						"v1",
 						"auctions",
-						"2"
+						"11"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -563,6 +595,10 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "TOK"
 					}
 				],
 				"body": {
@@ -570,7 +606,7 @@
 					"raw": "{\n  \"categoryId\": 0,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"startingBid\": 0\n}"
 				},
 				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/auctions/2",
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/11",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -583,9 +619,10 @@
 						"api",
 						"v1",
 						"auctions",
-						"2"
+						"11"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -619,7 +656,8 @@
 						"auctions",
 						"1"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -653,7 +691,8 @@
 						"auctions",
 						"1564841"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -688,7 +727,8 @@
 						"3",
 						"bids"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -723,7 +763,8 @@
 						"2",
 						"bids"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -758,7 +799,8 @@
 						"nonint",
 						"bids"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -793,7 +835,8 @@
 						"276877",
 						"bids"
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -805,6 +848,10 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "TOK"
 					}
 				],
 				"body": {
@@ -812,7 +859,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/auctions/4/bids?amount=500000",
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/4/bids?amount=500006",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -831,11 +878,12 @@
 					"query": [
 						{
 							"key": "amount",
-							"value": "500000",
+							"value": "500006",
 							"equals": true
 						}
 					]
-				}
+				},
+				"description": null
 			},
 			"response": []
 		},
@@ -878,7 +926,7 @@
 						}
 					]
 				},
-				"description": ""
+				"description": null
 			},
 			"response": []
 		},
@@ -921,7 +969,7 @@
 						}
 					]
 				},
-				"description": ""
+				"description": null
 			},
 			"response": []
 		},
@@ -964,16 +1012,19 @@
 						}
 					]
 				},
-				"description": ""
+				"description": null
 			},
 			"response": []
 		},
 		{
-			"name": "Get photo jpeg 200",
+			"name": "Get photo 200",
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/1/photos",
 					"protocol": "http",
@@ -992,35 +1043,7 @@
 						"photos"
 					]
 				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "Get photo png 200",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/auctions/2/photos",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "4941",
-					"path": [
-						"api",
-						"v1",
-						"auctions",
-						"2",
-						"photos"
-					]
-				},
-				"description": ""
+				"description": null
 			},
 			"response": []
 		},
@@ -1029,7 +1052,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/3/photos",
 					"protocol": "http",
@@ -1048,7 +1074,7 @@
 						"photos"
 					]
 				},
-				"description": ""
+				"description": null
 			},
 			"response": []
 		},
@@ -1057,7 +1083,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/badint/photos",
 					"protocol": "http",
@@ -1076,7 +1105,7 @@
 						"photos"
 					]
 				},
-				"description": ""
+				"description": null
 			},
 			"response": []
 		},
@@ -1085,7 +1114,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/1654645435/photos",
 					"protocol": "http",
@@ -1104,7 +1136,7 @@
 						"photos"
 					]
 				},
-				"description": ""
+				"description": null
 			},
 			"response": []
 		},
@@ -1116,16 +1148,18 @@
 					{
 						"key": "Content-Type",
 						"value": "image/jpeg"
+					},
+					{
+						"key": "x-api-key",
+						"value": "TOK"
 					}
 				],
 				"body": {
 					"mode": "file",
-					"file": {
-						"src": ""
-					}
+					"file": {}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/auctions/2/photos",
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/11/photos",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -1138,11 +1172,11 @@
 						"api",
 						"v1",
 						"auctions",
-						"2",
+						"11",
 						"photos"
 					]
 				},
-				"description": ""
+				"description": null
 			},
 			"response": []
 		},
@@ -1154,16 +1188,18 @@
 					{
 						"key": "Content-Type",
 						"value": "image/png"
+					},
+					{
+						"key": "x-api-key",
+						"value": "TOK"
 					}
 				],
 				"body": {
 					"mode": "file",
-					"file": {
-						"src": ""
-					}
+					"file": {}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/auctions/2/photos",
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/11/photos",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -1176,11 +1212,11 @@
 						"api",
 						"v1",
 						"auctions",
-						"2",
+						"11",
 						"photos"
 					]
 				},
-				"description": ""
+				"description": null
 			},
 			"response": []
 		},
@@ -1196,12 +1232,10 @@
 				],
 				"body": {
 					"mode": "file",
-					"file": {
-						"src": ""
-					}
+					"file": {}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/auctions/1/photos",
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/10/photos",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -1214,11 +1248,11 @@
 						"api",
 						"v1",
 						"auctions",
-						"1",
+						"10",
 						"photos"
 					]
 				},
-				"description": ""
+				"description": null
 			},
 			"response": []
 		},
@@ -1234,9 +1268,7 @@
 				],
 				"body": {
 					"mode": "file",
-					"file": {
-						"src": ""
-					}
+					"file": {}
 				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/7894/photos",
@@ -1254,6 +1286,398 @@
 						"auctions",
 						"7894",
 						"photos"
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Delete photo 201",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "image/jpeg"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/2/photos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"2",
+						"photos"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete photo (auction started) 401",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "image/jpeg"
+					},
+					{
+						"key": "x-api-key",
+						"value": "TOK"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/10/photos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"10",
+						"photos"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete photo 404",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "image/jpeg"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/245674/photos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"245674",
+						"photos"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"string\",\n  \"givenName\": \"string\",\n  \"familyName\": \"string\",\n  \"email\": \"user@example.com\",\n  \"password\": \"string\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/users",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Login with email 200",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/users/login?email=black.panther%40super.heroes&password=Wakanda",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "black.panther%40super.heroes",
+							"equals": true
+						},
+						{
+							"key": "password",
+							"value": "Wakanda",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Login with username 200",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/users/login?email=black.panther%40super.heroes&password=Wakanda",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "black.panther%40super.heroes",
+							"equals": true
+						},
+						{
+							"key": "password",
+							"value": "Wakanda",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Login 400",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/users/login?email=black.panther%40super.heroes&password=Wakanda",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "black.panther%40super.heroes",
+							"equals": true
+						},
+						{
+							"key": "password",
+							"value": "Wakanda",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Logout 200",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/users/logout",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"logout"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get user 200",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/users/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"1"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get user auth'd 200",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/users/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"1"
 					]
 				},
 				"description": ""
