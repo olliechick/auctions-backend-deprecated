@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "Auctions",
-		"_postman_id": "ec04f6fe-3124-4f00-86a7-51a0de425f90",
+		"_postman_id": "fad2738b-d471-a2b1-2f2d-f6ab59a63cee",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -35,8 +35,7 @@
 						"v1",
 						"reset"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -69,8 +68,7 @@
 						"v1",
 						"resample"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -79,7 +77,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions",
 					"protocol": "http",
@@ -95,8 +96,7 @@
 						"v1",
 						"auctions"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -105,7 +105,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions?category-id=1&bidder=7&winner=9&q=e&seller=3&count=7&start-index=0",
 					"protocol": "http",
@@ -158,8 +161,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -168,7 +170,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions?category-id=badid",
 					"protocol": "http",
@@ -191,8 +196,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -225,8 +229,7 @@
 						"v1",
 						"auctions"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -259,8 +262,7 @@
 						"v1",
 						"auctions"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -293,8 +295,7 @@
 						"v1",
 						"auctions"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -327,8 +328,7 @@
 						"v1",
 						"auctions"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -337,7 +337,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/1",
 					"protocol": "http",
@@ -354,8 +357,7 @@
 						"auctions",
 						"1"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -364,7 +366,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/not-an-int",
 					"protocol": "http",
@@ -381,8 +386,7 @@
 						"auctions",
 						"not-an-int"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -391,7 +395,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/1589456415748441",
 					"protocol": "http",
@@ -408,8 +415,7 @@
 						"auctions",
 						"1589456415748441"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -443,8 +449,7 @@
 						"auctions",
 						"2"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -478,8 +483,7 @@
 						"auctions",
 						"2"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -513,8 +517,7 @@
 						"auctions",
 						"2"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -548,8 +551,7 @@
 						"auctions",
 						"2"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -583,8 +585,7 @@
 						"auctions",
 						"2"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -618,8 +619,7 @@
 						"auctions",
 						"1"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -653,8 +653,7 @@
 						"auctions",
 						"1564841"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -689,8 +688,7 @@
 						"3",
 						"bids"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -725,8 +723,7 @@
 						"2",
 						"bids"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -761,8 +758,7 @@
 						"nonint",
 						"bids"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -797,8 +793,7 @@
 						"276877",
 						"bids"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -817,7 +812,92 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/auctions/1/bids?amount=500",
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/4/bids?amount=500000",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"4",
+						"bids"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "500000",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add (low) bid 400",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/4/bids?amount=50",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"4",
+						"bids"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "50",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add (late) bid 400",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/1/bids?amount=50000000",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -836,9 +916,344 @@
 					"query": [
 						{
 							"key": "amount",
-							"value": "500",
+							"value": "50000000",
 							"equals": true
 						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add bid non-existent auction 404",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/254949456/bids?amount=50",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"254949456",
+						"bids"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "50",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get photo jpeg 200",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/1/photos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"1",
+						"photos"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get photo png 200",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/2/photos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"2",
+						"photos"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get photo default 200",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/3/photos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"3",
+						"photos"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get photo 400",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/badint/photos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"badint",
+						"photos"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get photo 404",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/1654645435/photos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"1654645435",
+						"photos"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Post photo jpeg 201",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "image/jpeg"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": ""
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/2/photos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"2",
+						"photos"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Post photo png 201",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "image/png"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": ""
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/2/photos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"2",
+						"photos"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Post photo (bidding started) 400",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "image/png"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": ""
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/1/photos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"1",
+						"photos"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Post photo 404",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "image/jpeg"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": ""
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/auctions/7894/photos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"auctions",
+						"7894",
+						"photos"
 					]
 				},
 				"description": ""
