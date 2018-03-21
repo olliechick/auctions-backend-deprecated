@@ -7,9 +7,6 @@ Similarly, deleting a photo that doesn't exist will just send a 201 back to the 
 * If there are no bids, then the `currentBid` field in the JSON will be set to null and the `bids` field will be an empty array.
 
 # Response codes
-
-## auctions
-
 ## photos
 
 ### DELETE /auctions/{id}/photos 
@@ -25,7 +22,3 @@ If a login request is sent while a user is already logged in, a 500 is returned.
 ### PATCH /users/{id}
 * Users can't change their username or email to one that is already taken.
 There is no 400 error code in the spec, so a 401 is returned instead.
-
-* A 401 is also returned if
-
-## database
