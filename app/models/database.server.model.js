@@ -2,6 +2,7 @@ const db = require('../../config/db');
 const fs = require('fs');
 const resetFilename = __dirname + '/../../database/create_database.sql';
 const resampleFilename = __dirname + '/../../database/load_data.sql';
+const Photo = require('../models/photo.server.model');
 
 exports.reset = function (done) {
     let queryString = fs.readFileSync(resetFilename, "utf8");
@@ -11,7 +12,8 @@ exports.reset = function (done) {
         done(false, result);
     });
 
-    //todo delete photos
+    //todo Delete photos
+    //exec("mv ../../uploads/default.png ../../default.png; rm ../../uploads/*; mv ../../default.png ../../uploads/default.png")
 };
 
 exports.resample = function (done) {

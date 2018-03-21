@@ -193,29 +193,3 @@ exports.deletePhoto = function (values, done) {
 
 
 };
-
-
-/*
-    new Promise(function (resolve, reject) {
-
-    }).then(function () {
-
-        return new Promise(function (resolve, reject) {
-            //async code block
-        }).catch(function (err) {
-            throw err;
-        });
-    }).then(function(result) {
-        return done(result);
-    }).catch(function (err) {
-        return done({"ERROR": err});
-    });
-*/
-
-
-/*
-
-exports.NAME = function (values, done) {
-};
-*/
-

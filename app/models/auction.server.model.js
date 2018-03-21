@@ -27,7 +27,7 @@ exports.getAll = function (values, done) {
     let startIndex, count, q, categoryid, seller, bidder, winner;
     [startIndex, count, q, categoryid, seller, bidder, winner] = values;
     let nonNullValues = [];
-//TODO replace +ing user input with ?s
+
     // Build query based on parameters
     let queryString = "SELECT auction.* FROM auction";
 
@@ -334,14 +334,6 @@ exports.getBids = function (id, done) {
 };
 
 
-/*
- * TODO Check for:
- *     the auction exists (or 404)
- *     the auction doesn't belong to the buyer (or 400)
- *     the auction has started (or 400)
- *     the auction hasn't expired (or 400)
- *     the amount is higher than the current highest bid (or 400)
- */
 exports.addBid = function (values, done) {
     let auction_id, amount, token;
     [auction_id, amount, token] = values;

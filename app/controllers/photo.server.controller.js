@@ -51,7 +51,7 @@ exports.addPhoto = function (req, res) {
         } else if (req.headers['content-type'] === "image/jpeg" || req.headers['content-type'] === "image/png") {
             let fileExtension = req.headers['content-type'].slice(6); //trim the first 6 chars: "image/"
             try {
-
+//todo delete console.log()s
                 //First, delete auction's photo
                 new Promise(function (resolve, reject) {
                     Photo.deletePhoto(values, function (result) {
