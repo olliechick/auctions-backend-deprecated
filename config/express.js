@@ -1,6 +1,7 @@
 const express = require('express'),
     bodyParser = require('body-parser');
     fs = require('fs');
+    crypto =  require('crypto');
 
 module.exports = function(){
     const app = express();

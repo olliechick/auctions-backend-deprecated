@@ -128,6 +128,7 @@ exports.getAll = function (values, done) {
     }
 
     db.get_pool().query(queryString, nonNullValues, function (err, rows) {
+
         if (err) return done({"ERROR": errors.ERROR_SELECTING});
         return done(rows);
     });

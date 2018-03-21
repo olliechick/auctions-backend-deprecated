@@ -1,3 +1,10 @@
+
+exports.token = null;
+exports.token_user_id = null;
+
+
+
+
 /**
  * Returns the current date and time as a string, in the form yyyy-mm-dd hh:MM:ss
  */

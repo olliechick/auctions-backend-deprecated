@@ -66,7 +66,7 @@ exports.create = function (req, res) {
         "creationdate": logic.getCurrentDate(),
         "startingdate": req.body.startDateTime,
         "endingdate": req.body.endDateTime,
-        "userid": req.body.userid //TODO: use currently-logged-in user's userid here instead of getting it as part of request
+        "userid": req.body.userid //TODO: use currently-logged-in user's userid here instead of getting it from req.body
     };
 
     //TODO: check if authorised
