@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "Auctions",
-		"_postman_id": "6143a4ef-379f-4786-8ff2-56e6eaf0556a",
+		"_postman_id": "12fe8886-ca4b-14f8-cb57-6652182471a2",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -35,8 +35,7 @@
 						"v1",
 						"reset"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -69,8 +68,7 @@
 						"v1",
 						"resample"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -98,8 +96,7 @@
 						"v1",
 						"auctions"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -164,8 +161,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -200,8 +196,53 @@
 							"equals": true
 						}
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login with email 200 copy",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
 				},
-				"description": null
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/users/login?email=black.panther%40super.heroes&password=Wakanda",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "black.panther%40super.heroes",
+							"equals": true
+						},
+						{
+							"key": "password",
+							"value": "Wakanda",
+							"equals": true
+						}
+					]
+				}
 			},
 			"response": []
 		},
@@ -234,8 +275,7 @@
 						"v1",
 						"auctions"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -268,8 +308,7 @@
 						"v1",
 						"auctions"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -302,8 +341,7 @@
 						"v1",
 						"auctions"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -336,8 +374,7 @@
 						"v1",
 						"auctions"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -366,8 +403,7 @@
 						"auctions",
 						"1"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -396,8 +432,7 @@
 						"auctions",
 						"not-an-int"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -426,8 +461,7 @@
 						"auctions",
 						"1589456415748441"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -465,8 +499,7 @@
 						"auctions",
 						"11"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -504,8 +537,7 @@
 						"auctions",
 						"11"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -543,8 +575,7 @@
 						"auctions",
 						"11"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -582,8 +613,7 @@
 						"auctions",
 						"11"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -621,8 +651,7 @@
 						"auctions",
 						"11"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -656,8 +685,7 @@
 						"auctions",
 						"1"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -691,8 +719,7 @@
 						"auctions",
 						"1564841"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -727,8 +754,7 @@
 						"3",
 						"bids"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -763,8 +789,7 @@
 						"2",
 						"bids"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -799,8 +824,7 @@
 						"nonint",
 						"bids"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -835,8 +859,7 @@
 						"276877",
 						"bids"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -882,8 +905,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -925,8 +947,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -968,8 +989,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -1011,8 +1031,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -1042,8 +1061,7 @@
 						"1",
 						"photos"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -1073,8 +1091,7 @@
 						"3",
 						"photos"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -1104,8 +1121,7 @@
 						"badint",
 						"photos"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -1135,8 +1151,7 @@
 						"1654645435",
 						"photos"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -1156,7 +1171,9 @@
 				],
 				"body": {
 					"mode": "file",
-					"file": {}
+					"file": {
+						"src": ""
+					}
 				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/11/photos",
@@ -1175,8 +1192,7 @@
 						"11",
 						"photos"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -1196,7 +1212,9 @@
 				],
 				"body": {
 					"mode": "file",
-					"file": {}
+					"file": {
+						"src": ""
+					}
 				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/11/photos",
@@ -1215,8 +1233,7 @@
 						"11",
 						"photos"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -1232,7 +1249,9 @@
 				],
 				"body": {
 					"mode": "file",
-					"file": {}
+					"file": {
+						"src": ""
+					}
 				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/10/photos",
@@ -1251,8 +1270,7 @@
 						"10",
 						"photos"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -1268,7 +1286,9 @@
 				],
 				"body": {
 					"mode": "file",
-					"file": {}
+					"file": {
+						"src": ""
+					}
 				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/7894/photos",
@@ -1287,8 +1307,7 @@
 						"7894",
 						"photos"
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -1304,7 +1323,9 @@
 				],
 				"body": {
 					"mode": "file",
-					"file": {}
+					"file": {
+						"src": ""
+					}
 				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/2/photos",
@@ -1323,8 +1344,7 @@
 						"2",
 						"photos"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -1344,7 +1364,9 @@
 				],
 				"body": {
 					"mode": "file",
-					"file": {}
+					"file": {
+						"src": ""
+					}
 				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/10/photos",
@@ -1363,8 +1385,7 @@
 						"10",
 						"photos"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -1380,7 +1401,9 @@
 				],
 				"body": {
 					"mode": "file",
-					"file": {}
+					"file": {
+						"src": ""
+					}
 				},
 				"url": {
 					"raw": "http://127.0.0.1:4941/api/v1/auctions/245674/photos",
@@ -1399,8 +1422,7 @@
 						"245674",
 						"photos"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -1433,8 +1455,7 @@
 						"v1",
 						"users"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -1480,8 +1501,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -1527,8 +1547,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -1547,7 +1566,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://127.0.0.1:4941/api/v1/users/login?email=black.panther%40super.heroes&password=Wakanda",
+					"raw": "http://127.0.0.1:4941/api/v1/users/login?email=black.panther%40super.heroes&password=Wakana",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -1570,12 +1589,11 @@
 						},
 						{
 							"key": "password",
-							"value": "Wakanda",
+							"value": "Wakana",
 							"equals": true
 						}
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -1609,8 +1627,7 @@
 						"users",
 						"logout"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -1644,8 +1661,7 @@
 						"users",
 						"1"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -1657,6 +1673,44 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4941/api/v1/users/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4941",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit user 201",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "x-api-key",
+						"value": "TOK"
 					}
 				],
 				"body": {
