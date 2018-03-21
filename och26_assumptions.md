@@ -14,7 +14,7 @@ Similarly, deleting a photo that doesn't exist will just send a 201 back to the 
 
 ### DELETE /auctions/{id}/photos 
 * If the auction has started, then the photo can't be deleted.
-There is no 400 error code in the spec, so the server will a 401 is returned instead.
+There is no 400 error code in the spec, so a 401 is returned instead.
 
 ## users
 
