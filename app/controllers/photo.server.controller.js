@@ -5,7 +5,6 @@ const logic = require('../models/logic');
 exports.showPhoto = function (req, res) {
     let auction_id = parseInt(req.params.id);
 
-
     Photo.showPhoto(auction_id, function (result) {
         if (result["ERROR"] === errors.ERROR_ON_SERVER || result["ERROR"] === errors.ERROR_SELECTING) {
             res.statusCode = 500;
@@ -27,54 +26,101 @@ exports.showPhoto = function (req, res) {
             res.send(result["data"]);
         }
     });
-
 };
 
 exports.addPhoto = function (req, res) {
     let id = parseInt(req.params.id);
 
     Photo.addPhoto(id, function (result) {
-            if (result["ERROR"] === errors.ERROR_UNAUTHORISED) {
-                res.statusCode = 401;
-                res.statusMessage = "Unauthorised";
-                res.send();
-            } else if (result["ERROR"] === errors.ERROR_AUCTION_DOES_NOT_EXIST) {
-                res.statusCode = 404;
-                res.statusMessage = "Not found";
-                res.send();
-            } else if (result["ERROR"] === errors.ERROR_BIDDING) {
-                console.log('eb');
-                res.statusCode = 400;
-                res.statusMessage = "Bad request: bidding has already started.";
-                res.send();
-            } else if (req.headers['content-type'] === "image/jpeg" || req.headers['content-type'] === "image/png") {
-                let fileExtension = req.headers['content-type'].slice(6);
-                console.log("EXT: " + fileExtension);
-                try {
-                    //todo delete file with other extension
+        console.log(result, req.headers['content-type']);
 
-                    req.pipe(fs.createWriteStream(__dirname + "/../../uploads/" + id + '.' + fileExtension));
+        if (result["ERROR"] === errors.ERROR_UNAUTHORISED) {
+            res.statusCode = 401;
+            res.statusMessage = "Unauthorised";
+            res.send();
+        } else if (result["ERROR"] === errors.ERROR_AUCTION_DOES_NOT_EXIST) {
+            res.statusCode = 404;
+            res.statusMessage = "Not found";
+            res.send();
+        } else if (result["ERROR"] === errors.ERROR_AUCTION_STARTED) {
+            res.statusCode = 400;
+            res.statusMessage = "Bad request: the auction has already started.";
+            res.send();
+        } else if (req.headers['content-type'] === "image/jpeg" || req.headers['content-type'] === "image/png") {
+            let fileExtension = req.headers['content-type'].slice(6); //trim the first 6 chars: "image/"
+            try {
+
+                //First, delete auction's photo
+                new Promise(function (resolve, reject) {
+                    Photo.deletePhoto(id, function (result) {
+                        if (result["ERROR"] === errors.ERROR_ON_SERVER) {
+                            console.log('err del');
+                            reject(errors.ERROR_ON_SERVER);
+                        } else {
+                            resolve();
+                        }
+                    });
+
+                }).then(function () {
+
+                    return new Promise(function (resolve, reject) {
+                        // Then add the photo and send response
+                        req.pipe(fs.createWriteStream(__dirname + "/../../uploads/" + id + '.' + fileExtension));
+                        resolve();
+                    }).catch(function (err) {
+                        throw err;
+                    });
+
+                }).then(function() {
                     res.statusCode = 201;
                     res.statusMessage = "Photo saved";
                     res.send();
-                } catch (err) {
-                    res.statusCode = 500;
-                    res.statusMessage = "Internal server error";
-                    res.send();
+                }).catch(function (err) {
+                    throw err;
+                });
 
-                }
-            } else {
-                // The client sent something with a content-type that we don't accept
-                res.statusCode = 400;
-                res.statusMessage = "Bad request: only jpeg and png are accepted.";
+            } catch (err) {
+                console.log(5000, err);
+                res.statusCode = 500;
+                res.statusMessage = "Internal server error";
                 res.send();
             }
+        } else {
+            // The client sent something with a content-type that we don't accept
+            res.statusCode = 400;
+            res.statusMessage = "Bad request: only jpeg and png are accepted.";
+            res.send();
         }
-    );
+    });
 };
 
 exports.deletePhoto = function (req, res) {
-    return null;
+    let id = parseInt(req.params.id);
+
+    Photo.deletePhoto(id, function (result) {
+        console.log(result);
+        if (result["ERROR"] === errors.ERROR_UNAUTHORISED) {
+            res.statusCode = 401;
+            res.statusMessage = "Unauthorised";
+            res.send();
+        } else if (result["ERROR"] === errors.ERROR_AUCTION_DOES_NOT_EXIST) {
+            res.statusCode = 404;
+            res.statusMessage = "Not found";
+            res.send();
+        } else if (result["ERROR"] === errors.ERROR_AUCTION_STARTED) {
+            res.statusCode = 401; //should be 400, but not in spec
+            res.statusMessage = "Bad request: the auction has already started.";
+            res.send();
+        } else if (result["ERROR"] === errors.ERROR_ON_SERVER) {
+            res.statusCode = 500;
+            res.statusMessage = "Internal server error";
+            res.send();
+        } else {
+            res.statusCode = 201;
+            res.statusMessage = "Photo deleted";
+            res.send();
+        }
+    });
 };
 
 /*

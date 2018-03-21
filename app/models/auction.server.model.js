@@ -263,12 +263,14 @@ exports.alter = function (values, done) {
         });
     }
 
-    // Check there are no bids
+    // Check the auction hasn't started
     new Promise(function (resolve, reject) {
-        db.get_pool().query("SELECT * FROM bid WHERE bid_auctionid = ?", [id], function (err, rows) {
+        let queryString = "SELECT * FROM auction WHERE auction_id = ? AND auction_startingdate > '" +
+            logic.getCurrentDate() + "'";
+        db.get_pool().query(queryString, [id], function (err, rows) {
             if (err) reject(errors.ERROR_SELECTING);
-            else if (rows.length >= 1) {
-                reject(errors.ERROR_BIDDING);
+            else if (rows.length === 0) {
+                reject(errors.ERROR_AUCTION_STARTED);
             }
         });
 

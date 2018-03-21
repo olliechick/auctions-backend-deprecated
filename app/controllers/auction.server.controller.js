@@ -213,9 +213,9 @@ exports.edit = function (req, res) {
             res.statusCode = 404;
             res.statusMessage = "Not found.";
             res.send();
-        } else if (result["ERROR"] === errors.ERROR_BIDDING) {
+        } else if (result["ERROR"] === errors.ERROR_AUCTION_STARTED) {
             res.statusCode = 403;
-            res.statusMessage = "Forbidden - bidding has begun on the auction.";
+            res.statusMessage = "Forbidden - the auction has begun.";
             res.send();
         } else if (result["ERROR"] === errors.ERROR_BAD_REQUEST) {
             res.statusCode = 400;

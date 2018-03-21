@@ -25,16 +25,17 @@ exports.showPhoto = function (id, done) {
             } else {
                 resolve();
             }
-        });/*
-    }).then(function () {
-
-        return new Promise(function (resolve, reject) {
-
-        }).catch(function (err) {
-            throw err;
         });
-*/
-    }).then(function() {
+        /*
+            }).then(function () {
+
+                return new Promise(function (resolve, reject) {
+
+                }).catch(function (err) {
+                    throw err;
+                });
+        */
+    }).then(function () {
         console.log(2);
         // All checks are complete, get the file.
         return new Promise(function (resolve, reject) {
@@ -42,7 +43,7 @@ exports.showPhoto = function (id, done) {
                 console.log(data);
                 if (err) {
                     if (err.code === 'ENOENT') {
-                        fs.readFile(filepath + ".jpeg", function(err, data) {
+                        fs.readFile(filepath + ".jpeg", function (err, data) {
                             console.log(data);
                             if (err) {
                                 if (err.code === 'ENOENT') {
@@ -69,7 +70,7 @@ exports.showPhoto = function (id, done) {
         }).catch(function (err) {
             throw err;
         });
-    }).then(function(result) {
+    }).then(function (result) {
         return done(result);
     }).catch(function (err) {
         return done({"ERROR": err});
@@ -78,14 +79,29 @@ exports.showPhoto = function (id, done) {
 
 };
 
-exports.addPhoto = function (id, done) {
-
-    // Check the auction exists
-    new Promise(function (resolve, reject) {
+/**
+ * Checks if the user can manipulate the auction. Criteria:
+ *      auction_id must represent a valid auction
+ *      buyer_id must be authorised to edit it
+ *      the auction must not have started
+ * Returns a promise that will be rejected if any of these criteria are not met.
+ * Throws:
+ *      errors.ERROR_SELECTING if there is a generic server error
+ *      errors.ERROR_AUCTION_DOES_NOT_EXIST if the auction doesn't exist
+ *      errors.ERROR_UNAUTHORISED if the user isn't authorised
+ *      errors.ERROR_AUCTION_STARTED if the auction has started
+ *
+ */
+function checkIfUserCanManipulateAuction(user_id, auction_id) {
+    console.log(0);
+    return new Promise(function (resolve, reject) {
         console.log(1);
-        db.get_pool().query("SELECT * from auction where auction_id = ?", [id], function (err, rows) {
+        // Check the auction exists
+        db.get_pool().query("SELECT * from auction where auction_id = ?", [auction_id], function (err, rows) {
+            console.log(1 + ": " + err, rows);
             if (err) reject(errors.ERROR_SELECTING);
             else if (rows.length === 0) {
+                console.log('doesnt esxit');
                 reject(errors.ERROR_AUCTION_DOES_NOT_EXIST);
             } else if (rows.length > 1) {
                 reject(errors.ERROR_SELECTING); // multiple auctions with same id - panic!
@@ -95,7 +111,7 @@ exports.addPhoto = function (id, done) {
         });
     }).then(function () {
         console.log(2);
-
+        // Check is user is authorised
         return new Promise(function (resolve, reject) {
 
             //todo auth
@@ -113,11 +129,13 @@ exports.addPhoto = function (id, done) {
 
         return new Promise(function (resolve, reject) {
 
-            db.get_pool().query("SELECT * FROM bid WHERE bid_auctionid = ?", [id], function (err, rows) {
+            queryString = "SELECT * FROM auction WHERE auction_id = ? AND auction_startingdate > '" +
+                logic.getCurrentDate() + "'";
+            db.get_pool().query(queryString, [auction_id], function (err, rows) {
                 console.log("R: " + rows);
                 if (err) reject(errors.ERROR_SELECTING);
-                else if (rows.length >= 1) {
-                    reject(errors.ERROR_BIDDING);
+                else if (rows.length === 0) {
+                    reject(errors.ERROR_AUCTION_STARTED);
                 } else {
                     resolve(1);
                 }
@@ -126,30 +144,81 @@ exports.addPhoto = function (id, done) {
         }).catch(function (err) {
             console.log("ERR: " + err);
             throw err;
-        });/*
-    }).then(function () {
+        });
+    });
+}
+
+exports.addPhoto = function (auction_id, done) {
+
+    user_id = 1; //todo get auth'd user
+
+    checkIfUserCanManipulateAuction(user_id, auction_id).then(function (result) {
+        console.log(900, result);
+        return done(result);
+    }).catch(function (err) {
+        console.log(800, err);
+        return done({"ERROR": err});
+    });
+};
+
+exports.deletePhoto = function (auction_id, done) {
+
+    let filepath = __dirname + "/../../uploads/" + auction_id;
+    checkIfUserCanManipulateAuction(user_id, auction_id).then(function () {
 
         return new Promise(function (resolve, reject) {
-
+            fs.unlink(filepath + ".jpeg", function (err) {
+                if (err) {
+                    if (err.code === 'ENOENT') {
+                        fs.unlink(filepath + ".png", function (err) {
+                            if (err) {
+                                if (err.code === 'ENOENT') {
+                                    resolve(1);
+                                } else {
+                                    reject(errors.ERROR_ON_SERVER);
+                                }
+                            } else {
+                                resolve(1);
+                            }
+                        });
+                    } else {
+                        reject(errors.ERROR_ON_SERVER);
+                    }
+                } else {
+                    resolve(1);
+                }
+            });
         }).catch(function (err) {
             throw err;
         });
-*/
-    }).then(function(result) {
-        console.log(4);
+
+    }).then(function (result) {
         return done(result);
     }).catch(function (err) {
-        console.log(5, err);
+        console.log(err);
         return done({"ERROR": err});
     });
 
 
 };
 
-exports.deletePhoto = function (id, done) {
-    return null;
 
-};
+/*
+    new Promise(function (resolve, reject) {
+
+    }).then(function () {
+
+        return new Promise(function (resolve, reject) {
+            //async code block
+        }).catch(function (err) {
+            throw err;
+        });
+    }).then(function(result) {
+        return done(result);
+    }).catch(function (err) {
+        return done({"ERROR": err});
+    });
+*/
 
 
 /*
