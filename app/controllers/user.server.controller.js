@@ -51,7 +51,6 @@ exports.login = function (req, res) {
     }
 
     User.login(values, function (result) {
-        console.log('3');
         if (result["ERROR"] === errors.ERROR_SELECTING || result["ERROR"] === errors.ERROR_ON_SERVER) {
             res.statusCode = 500;
             res.statusMessage = "Internal server error";
@@ -71,7 +70,6 @@ exports.login = function (req, res) {
 
 exports.logout = function (req, res) {
     User.logout(req.headers["x-api-key"], function (result) {
-        console.log('3');
         if (result["ERROR"] === errors.ERROR_UNAUTHORISED) {
             res.statusCode = 401;
             res.statusMessage = "Unauthorised";

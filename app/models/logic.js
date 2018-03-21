@@ -2,7 +2,14 @@
 exports.token = null;
 exports.token_user_id = null;
 
-
+exports.isJsonString = function(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
 
 
 /**

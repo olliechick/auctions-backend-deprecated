@@ -80,9 +80,6 @@ exports.create = function (req, res) {
         "userid": userid
     };
 
-    console.log(auction_data["startingdate"]);
-    console.log(new Date().getTime());
-
     // Check everything is there and dates are valid
     if (!logic.arePositiveIntegers([auction_data["categoryid"], auction_data["reserveprice"], auction_data["startingprice"],
             auction_data["startingdate"], auction_data["endingdate"]])
@@ -94,7 +91,6 @@ exports.create = function (req, res) {
         res.statusCode = 400;
         res.statusMessage = "Malformed auction data";
         res.send();
-        return;
     } else {
         // valid data
 

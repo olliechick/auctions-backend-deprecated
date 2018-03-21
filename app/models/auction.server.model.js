@@ -137,7 +137,7 @@ exports.getAll = function (values, done) {
 exports.insert = function (values, done) {
 
     // Check the category id is valid
-    let promise = new Promise(function (resolve, reject) {
+    let  promise = new Promise(function (resolve, reject) {
         db.get_pool().query("SELECT * FROM category WHERE category_id = ?", [values[1]], function (err, rows) {
             if (err) reject(errors.ERROR_SELECTING);
             else if (rows.length === 0) {
@@ -231,7 +231,6 @@ exports.alter = function (values, done) {
 
     // Check the auction exists
     new Promise(function (resolve, reject) {
-        console.log(30);
         db.get_pool().query("SELECT * FROM auction WHERE auction_id = ?", [id], function (err, rows) {
             if (err) reject(errors.ERROR_SELECTING);
             else if (rows.length === 0) {
@@ -245,22 +244,16 @@ exports.alter = function (values, done) {
 
         // Check auth'd
     }).then(function (rows) {
-        console.log(40);
         let user_id = rows[0]["auction_userid"];
-        console.log(user_id, logic.token_user_id);
         if (!(user_id === logic.token_user_id && token === logic.token)) {
-            console.log('unathd:', user_id, logic.token_user_id, token, logic.token);
             throw errors.ERROR_UNAUTHORISED;
         }
 
         // Check valid category
     }).then(function () {
-        console.log(50);
         return new Promise(function (resolve, reject) {
             if (categoryId != null) {
-                console.log(51);
                 db.get_pool().query("SELECT * FROM category WHERE category_id = ?", [categoryId], function (err, rows) {
-                    console.log(52);
                     if (err) reject(errors.ERROR_SELECTING);
                     else if (rows.length === 0) {
                         reject(errors.ERROR_BAD_REQUEST);
@@ -273,7 +266,6 @@ exports.alter = function (values, done) {
 
         // Check the auction hasn't started
     }).then(function () {
-        console.log(55);
         return new Promise(function (resolve, reject) {
             let queryString = "SELECT * FROM auction WHERE auction_id = ? AND auction_startingdate > '" +
                 logic.getCurrentDate() + "'";
@@ -289,7 +281,6 @@ exports.alter = function (values, done) {
 
         // Update the auction
     }).then(function () {
-        console.log(60);
         return new Promise(function (resolve, reject) {
             if (nonNullValues.length === 0) {
                 reject(errors.ERROR_NO_FIELDS);
@@ -307,7 +298,6 @@ exports.alter = function (values, done) {
     }).then(function (result) {
         return done(result);
     }).catch(function (err) {
-        console.log(99);
         return (done({"ERROR": err}));
     });
 };
@@ -390,7 +380,6 @@ exports.addBid = function (values, done) {
                 " AND bid_amount >= ?";
             let values = [auction_id, amount];
             db.get_pool().query(queryString, values, function (err, rows) {
-                //console.log(rows);
                 if (err) reject(errors.ERROR_SELECTING);
                 else if (rows.length > 0) {
                     reject(errors.ERROR_BAD_REQUEST);

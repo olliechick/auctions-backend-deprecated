@@ -60,7 +60,7 @@ exports.login = function (values, done) {
             db.get_pool().query(queryString, credentials, function (err, rows) {
                 if (err) reject(errors.ERROR_SELECTING);
                 if (rows.length === 1) {
-                    logic.token = "TOK"//TODO reinstate: crypto.randomBytes(32).toString("base64"); //shoutout to jack steel
+                    logic.token = crypto.randomBytes(32).toString("base64"); //shoutout to jack steel
                     logic.token_user_id = rows[0]["user_id"];
                     resolve();
                 } else {
@@ -74,10 +74,9 @@ exports.login = function (values, done) {
             let credentials = [username, password];
             let queryString = "SELECT * from auction_user where user_username = ? AND user_password = ?";
             db.get_pool().query(queryString, credentials, function (err, rows) {
-                console.log(queryString, credentials);
                 if (err) reject(errors.ERROR_SELECTING);
                 if (rows.length === 1) {
-                    logic.token = "TOK"//TODO reinstate: crypto.randomBytes(32).toString("base64"); //shoutout to jack steel
+                    logic.token = crypto.randomBytes(32).toString("base64"); //shoutout to jack steel
                     logic.token_user_id = rows[0]["user_id"];
                     resolve();
                 } else {
@@ -120,14 +119,11 @@ exports.viewUser = function (values, done) {
         user_json.username = user["user_username"];
         user_json.givenName = user["user_givenname"];
         user_json.familyName = user["user_familyname"];
-        console.log(user_json);
-        console.log(user_id, logic.token_user_id);
         if (user_id === logic.token_user_id && token === logic.token) {
             //authorised
             user_json.email = user["user_email"];
             user_json.accountBalance = user["user_accountbalance"];
         }
-        console.log(user_json);
         return (done(user_json));
     });
 };
