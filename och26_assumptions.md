@@ -1,7 +1,7 @@
-I assume that any JSON sent in the body will be valid JSON.
+* Any JSON sent in the body will be valid JSON.
 That is, in the form `{"key": "value"}`, not something like `7`, `random text`, `{"""""":::"##$"}`, or `{"key": "value" "key": "value"}`.
 
-I also assume that sellers can replace their photo just be posting a new one, and that they can't add or replace an auction's photo if there are any bids on it.
+* Sellers can replace their photo just be posting a new one, and that they can't add or replace an auction's photo if there are any bids on it.
 
 # Response codes
 
