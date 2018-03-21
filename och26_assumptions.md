@@ -8,15 +8,13 @@ Similarly, deleting a photo that doesn't exist will just send a 201 back to the 
 
 # Response codes
 
-I assume that the following response codes mentioned in the spec have no reason to be returned.
-
 ## auctions
 
-### GET /auctions/{id}
-* 401: Any user can view an auction, whether or not they are logged in.
-Hence, they do not need to be authorised.
-
 ## photos
+
+### DELETE /auctions/{id}/photos 
+* If the auction has started, then the photo can't be deleted.
+There is no 400 error code in the spec, so the server will a 401 is returned instead.
 
 ## users
 
