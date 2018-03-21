@@ -57,6 +57,17 @@ exports.list = function (req, res) {
 };
 
 exports.create = function (req, res) {
+
+    let userid;
+    if (req.headers["x-api-key"] === logic.token) { //if auth'd
+        userid = logic.token_user_id;
+    } else {
+        res.statusCode = 401;
+        res.statusMessage = "Unauthorized";
+        res.send();
+        return;
+    }
+
     let auction_data = {
         "title": req.body.title,
         "categoryid": req.body.categoryId,
@@ -66,20 +77,9 @@ exports.create = function (req, res) {
         "creationdate": logic.getCurrentDate(),
         "startingdate": req.body.startDateTime,
         "endingdate": req.body.endDateTime,
-        "userid": req.body.userid //TODO: use currently-logged-in user's userid here instead of getting it from req.body
+        "userid": userid
     };
 
-    //TODO: check if authorised
-    let userid = auction_data['userid'];
-    /*
-    if (authorised) {
-        let userid = USER_ID;
-    } else {
-        res.statusCode = 401;
-        res.statusMessage = "Unauthorized";
-        res.send();
-    }
-     */
     if (!logic.arePositiveIntegers([auction_data["categoryid"], auction_data["reserveprice"], auction_data["startingprice"],
             auction_data["startingdate"], auction_data["endingdate"]]) || auction_data["title"] === undefined ||
         auction_data["description"] === undefined) {
@@ -150,6 +150,8 @@ exports.view = function (req, res) {
 };
 
 exports.edit = function (req, res) {
+
+
     let id = req.params.id;
     let auction_data = {
         "categoryid": req.body.categoryId,
@@ -160,16 +162,6 @@ exports.edit = function (req, res) {
         "reserveprice": req.body.reservePrice,
         "startingprice": req.body.startingBid,
     };
-
-    //TODO: check if authorised
-    /*
-    let userid = ;
-    if (!authorised) {
-        res.statusCode = 401;
-        res.statusMessage = "Unauthorized";
-        res.send();
-    }
-     */
 
     //Convert integers to decimal or datetime, in order to store it in the DB
     let reserveprice;
@@ -201,7 +193,8 @@ exports.edit = function (req, res) {
         startingdate,
         endingdate,
         reserveprice,
-        startingprice
+        startingprice,
+        req.headers["x-api-key"]
     ];
 
     Auction.alter(values, function (result) {
@@ -220,6 +213,10 @@ exports.edit = function (req, res) {
         } else if (result["ERROR"] === errors.ERROR_BAD_REQUEST) {
             res.statusCode = 400;
             res.statusMessage = "Bad request";
+            res.send();
+        } else if (result["ERROR"] === errors.ERROR_UNAUTHORISED) {
+            res.statusCode = 401;
+            res.statusMessage = "Unauth'd";
             res.send();
         } else {
             res.statusCode = 201;
@@ -266,23 +263,15 @@ exports.getBids = function (req, res) {
 exports.addBid = function (req, res) {
     let auction_id = parseInt(req.params.id);
     let amount = parseInt(req.query["amount"]);
+    let token = req.headers["x-api-key"];
 
-    //TODO: check if authorised, and get user id
-
-    let buyer_id = 1;/* get_user_id();
-    if (!authorised) {
-        res.statusCode = 401;
-        res.statusMessage = "Unauthorized";
-        res.send();
-    }
-     */
     if (!logic.arePositiveIntegers([auction_id, amount])) {
         res.statusCode = 400;
         res.statusMessage = "Bad request: auction id and amount shouold be positive integers.";
         res.send();
     }
 
-    let values = [auction_id, amount, buyer_id];
+    let values = [auction_id, amount, token];
 
     Auction.addBid(values, function(result) {
         if (result["ERROR"] === errors.ERROR_SELECTING) {
@@ -292,6 +281,10 @@ exports.addBid = function (req, res) {
         } else if (result["ERROR"] === errors.ERROR_BAD_REQUEST) {
             res.statusCode = 400;
             res.statusMessage = "Bad request.";
+            res.send();
+        } else if (result["ERROR"] === errors.ERROR_UNAUTHORISED) {
+            res.statusCode = 401;
+            res.statusMessage = "unauth'd";
             res.send();
         } else if (result["ERROR"] === errors.ERROR_AUCTION_DOES_NOT_EXIST) {
             res.statusCode = 404;

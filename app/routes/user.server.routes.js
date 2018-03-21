@@ -10,9 +10,9 @@ module.exports = function(app) {
 
     app.route(api_base + '/users/logout')
         .post(users.logout);
-/*
+
     app.route(api_base + '/users/:id')
-        .get(users.viewUser)
+        .get(users.viewUser)/*
         .patch(users.editUser);*/
 
 };

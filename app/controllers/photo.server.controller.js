@@ -30,9 +30,11 @@ exports.showPhoto = function (req, res) {
 
 exports.addPhoto = function (req, res) {
     let id = parseInt(req.params.id);
+    let token = req.headers["x-api-key"];
+    let values = [id, token];
 
-    Photo.addPhoto(id, function (result) {
-        console.log(result, req.headers['content-type']);
+    Photo.addPhoto(values, function (result) {
+        console.log(result, req.headers['content-type'], );
 
         if (result["ERROR"] === errors.ERROR_UNAUTHORISED) {
             res.statusCode = 401;
@@ -52,7 +54,7 @@ exports.addPhoto = function (req, res) {
 
                 //First, delete auction's photo
                 new Promise(function (resolve, reject) {
-                    Photo.deletePhoto(id, function (result) {
+                    Photo.deletePhoto(values, function (result) {
                         if (result["ERROR"] === errors.ERROR_ON_SERVER) {
                             console.log('err del');
                             reject(errors.ERROR_ON_SERVER);
@@ -96,8 +98,10 @@ exports.addPhoto = function (req, res) {
 
 exports.deletePhoto = function (req, res) {
     let id = parseInt(req.params.id);
+    let token = req.headers["x-api-key"];
+    let values = [id, token];
 
-    Photo.deletePhoto(id, function (result) {
+    Photo.deletePhoto(values, function (result) {
         console.log(result);
         if (result["ERROR"] === errors.ERROR_UNAUTHORISED) {
             res.statusCode = 401;

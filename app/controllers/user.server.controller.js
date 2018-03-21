@@ -25,6 +25,10 @@ exports.addUser = function (req, res) {
             res.statusCode = 500;
             res.statusMessage = "Internal server error";
             res.send();
+        } else if (result["ERROR"] === errors.ERROR_BAD_REQUEST) {
+            res.statusCode = 400;
+            res.statusMessage = "Bad req";
+            res.send();
         } else {
             res.statusCode = 201;
             res.statusMessage = "OK";
@@ -57,7 +61,7 @@ exports.login = function (req, res) {
             res.statusMessage = "Invalid username/email/password supplied";
             res.send();
         } else {
-            res.statusCode = 201;
+            res.statusCode = 200;
             res.statusMessage = "OK";
             let jsonfile = {"id": logic.token_user_id, "token": logic.token};
             res.json(jsonfile);
@@ -76,6 +80,28 @@ exports.logout = function (req, res) {
             res.statusCode = 200;
             res.statusMessage = "OK";
             res.send();
+        }
+    });
+};
+
+exports.viewUser = function (req, res) {
+    let user_id = parseInt(req.params.id);
+    let token = req.headers["x-api-key"];
+    let values = [user_id, token];
+
+    User.viewUser(values, function (result) {
+        if (result["ERROR"] === errors.ERROR_SELECTING) {
+            res.statusCode = 500;
+            res.statusMessage = "server error";
+            res.send();
+        } else if (result["ERROR"] === errors.ERROR_NOT_FOUND) {
+            res.statusCode = 404;
+            res.statusMessage = "user not found";
+            res.send();
+        } else {
+            res.statusCode = 200;
+            res.statusMessage = "OK";
+            res.json(result);
         }
     });
 };

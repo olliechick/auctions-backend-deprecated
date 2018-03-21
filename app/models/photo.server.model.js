@@ -92,7 +92,7 @@ exports.showPhoto = function (id, done) {
  *      errors.ERROR_AUCTION_STARTED if the auction has started
  *
  */
-function checkIfUserCanManipulateAuction(user_id, auction_id) {
+function checkIfUserCanManipulateAuction(auction_id, token) {
     console.log(0);
     return new Promise(function (resolve, reject) {
         console.log(1);
@@ -106,23 +106,13 @@ function checkIfUserCanManipulateAuction(user_id, auction_id) {
             } else if (rows.length > 1) {
                 reject(errors.ERROR_SELECTING); // multiple auctions with same id - panic!
             } else {
-                resolve();
+                // Authorise
+                user_id = rows[0]["auction_userid"];
+                if (!(user_id === logic.token_user_id && token === logic.token)) {
+                    console.log('unathd:', user_id, logic.token_user_id, token, logic.token);
+                    reject(errors.ERROR_UNAUTHORISED);
+                } else resolve();
             }
-        });
-    }).then(function () {
-        console.log(2);
-        // Check is user is authorised
-        return new Promise(function (resolve, reject) {
-
-            //todo auth
-            /*
-                if (!authorised) {
-                    reject(errors.ERROR_UNAUTHORISED)
-                } else {*/
-            resolve();
-
-        }).catch(function (err) {
-            throw err;
         });
     }).then(function () {
         console.log(3);
@@ -148,11 +138,11 @@ function checkIfUserCanManipulateAuction(user_id, auction_id) {
     });
 }
 
-exports.addPhoto = function (auction_id, done) {
+exports.addPhoto = function (values, done) {
+    let auction_id, token;
+    [auction_id, token] = values;
 
-    user_id = 1; //todo get auth'd user
-
-    checkIfUserCanManipulateAuction(user_id, auction_id).then(function (result) {
+    checkIfUserCanManipulateAuction(auction_id, token).then(function (result) {
         console.log(900, result);
         return done(result);
     }).catch(function (err) {
@@ -161,10 +151,12 @@ exports.addPhoto = function (auction_id, done) {
     });
 };
 
-exports.deletePhoto = function (auction_id, done) {
+exports.deletePhoto = function (values, done) {
+    let auction_id, token;
+    [auction_id, token] = values;
 
     let filepath = __dirname + "/../../uploads/" + auction_id;
-    checkIfUserCanManipulateAuction(user_id, auction_id).then(function () {
+    checkIfUserCanManipulateAuction(auction_id, token).then(function () {
 
         return new Promise(function (resolve, reject) {
             fs.unlink(filepath + ".jpeg", function (err) {

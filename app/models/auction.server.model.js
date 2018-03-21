@@ -136,7 +136,6 @@ exports.getAll = function (values, done) {
 
 exports.insert = function (values, done) {
 
-
     // Check the category id is valid
     let promise = new Promise(function (resolve, reject) {
         db.get_pool().query("SELECT * FROM category WHERE category_id = ?", [values[1]], function (err, rows) {
@@ -167,8 +166,6 @@ exports.insert = function (values, done) {
     }).catch(function (err) {
         return (done({"ERROR": err}));
     });
-
-
 };
 
 /**
@@ -191,8 +188,8 @@ exports.alter = function (values, done) {
     let nonNullValues = [];
     let firstSet = true;
     let queryString = "UPDATE auction ";
-    let id, categoryId, title, description, startDateTime, endDateTime, reservePrice, startingBid;
-    [id, categoryId, title, description, startDateTime, endDateTime, reservePrice, startingBid] = values;
+    let id, categoryId, title, description, startDateTime, endDateTime, reservePrice, startingBid, token;
+    [id, categoryId, title, description, startDateTime, endDateTime, reservePrice, startingBid, token] = values;
 
     if (categoryId != null) {
         [firstSet, queryString] = setSeparator(firstSet, queryString);
@@ -234,6 +231,7 @@ exports.alter = function (values, done) {
 
     // Check the auction exists
     new Promise(function (resolve, reject) {
+        console.log(30);
         db.get_pool().query("SELECT * FROM auction WHERE auction_id = ?", [id], function (err, rows) {
             if (err) reject(errors.ERROR_SELECTING);
             else if (rows.length === 0) {
@@ -241,64 +239,79 @@ exports.alter = function (values, done) {
             } else if (rows.length > 1) {
                 reject(errors.ERROR_SELECTING); //somehow, there are multiple auctions with the same id
             } else {
-                resolve();
+                resolve(rows);
             }
         });
 
-    }).catch(function (err) {
-        return (done({"ERROR": err}));
-    });
+        // Check auth'd
+    }).then(function (rows) {
+        console.log(40);
+        let user_id = rows[0]["auction_userid"];
+        console.log(user_id, logic.token_user_id);
+        if (!(user_id === logic.token_user_id && token === logic.token)) {
+            console.log('unathd:', user_id, logic.token_user_id, token, logic.token);
+            throw errors.ERROR_UNAUTHORISED;
+        }
 
-    // Check the category id is valid
-    if (categoryId != null) {
-        new Promise(function (resolve, reject) {
-            db.get_pool().query("SELECT * FROM category WHERE category_id = ?", [categoryId], function (err, rows) {
+        // Check valid category
+    }).then(function () {
+        console.log(50);
+        return new Promise(function (resolve, reject) {
+            if (categoryId != null) {
+                console.log(51);
+                db.get_pool().query("SELECT * FROM category WHERE category_id = ?", [categoryId], function (err, rows) {
+                    console.log(52);
+                    if (err) reject(errors.ERROR_SELECTING);
+                    else if (rows.length === 0) {
+                        reject(errors.ERROR_BAD_REQUEST);
+                    } else resolve();
+                });
+            } else resolve();
+        }).catch(function (err) {
+            throw err;
+        });
+
+        // Check the auction hasn't started
+    }).then(function () {
+        console.log(55);
+        return new Promise(function (resolve, reject) {
+            let queryString = "SELECT * FROM auction WHERE auction_id = ? AND auction_startingdate > '" +
+                logic.getCurrentDate() + "'";
+            db.get_pool().query(queryString, [id], function (err, rows) {
                 if (err) reject(errors.ERROR_SELECTING);
                 else if (rows.length === 0) {
-                    reject(errors.ERROR_BAD_REQUEST);
-                }
+                    reject(errors.ERROR_AUCTION_STARTED);
+                } else resolve();
             });
-
         }).catch(function (err) {
-            return (done({"ERROR": err}));
+            throw err;
         });
-    }
 
-    // Check the auction hasn't started
-    new Promise(function (resolve, reject) {
-        let queryString = "SELECT * FROM auction WHERE auction_id = ? AND auction_startingdate > '" +
-            logic.getCurrentDate() + "'";
-        db.get_pool().query(queryString, [id], function (err, rows) {
-            if (err) reject(errors.ERROR_SELECTING);
-            else if (rows.length === 0) {
-                reject(errors.ERROR_AUCTION_STARTED);
+        // Update the auction
+    }).then(function () {
+        console.log(60);
+        return new Promise(function (resolve, reject) {
+            if (nonNullValues.length === 0) {
+                reject(errors.ERROR_NO_FIELDS);
             }
-        });
+            nonNullValues.push(id);
 
-    }).catch(function (err) {
-        return (done({"ERROR": err}));
-    });
-
-    // Update the auction
-    new Promise(function (resolve, reject) {
-        if (nonNullValues.length === 0) {
-            reject(errors.ERROR_NO_FIELDS);
-        }
-        nonNullValues.push(id);
-
-        db.get_pool().query(queryString, nonNullValues, function (err, result) {
-            if (err) reject(errors.ERROR_SELECTING);
-            resolve(result);
+            db.get_pool().query(queryString, nonNullValues, function (err, result) {
+                if (err) reject(errors.ERROR_SELECTING);
+                resolve(result);
+            });
+        }).catch(function (err) {
+            throw err;
         });
 
     }).then(function (result) {
         return done(result);
-
     }).catch(function (err) {
+        console.log(99);
         return (done({"ERROR": err}));
     });
-
 };
+
 
 exports.getBids = function (id, done) {
     let queryString = "SELECT bid.*, user_username AS buyer_username " +
@@ -320,10 +333,6 @@ exports.getBids = function (id, done) {
     });
 };
 
-function insertABid(buyer_id, auction_id, amount) {
-    console.log(1);
-
-}
 
 /*
  * TODO Check for:
@@ -334,9 +343,17 @@ function insertABid(buyer_id, auction_id, amount) {
  *     the amount is higher than the current highest bid (or 400)
  */
 exports.addBid = function (values, done) {
-    let auction_id, amount, buyer_id;
-    [auction_id, amount, buyer_id] = values;
+    let auction_id, amount, token;
+    [auction_id, amount, token] = values;
     amount = logic.centsToDollars(amount);
+    let buyer_id;
+
+    // Authorise
+    if (token === logic.token) { //if auth'd
+        buyer_id = logic.token_user_id;
+    } else {
+        return done({"ERROR": errors.ERROR_UNAUTHORISED});
+    }
 
     // Check the auction exists
     new Promise(function (resolve, reject) {
@@ -364,7 +381,7 @@ exports.addBid = function (values, done) {
                 if (err) reject(errors.ERROR_SELECTING);
                 else if (rows.length === 0) {
                     reject(errors.ERROR_BAD_REQUEST);
-                }else {
+                } else {
                     resolve();
                 }
             });
@@ -385,7 +402,7 @@ exports.addBid = function (values, done) {
                 if (err) reject(errors.ERROR_SELECTING);
                 else if (rows.length > 0) {
                     reject(errors.ERROR_BAD_REQUEST);
-                }else {
+                } else {
                     resolve();
                 }
             });
@@ -393,7 +410,7 @@ exports.addBid = function (values, done) {
             throw err;
         });
 
-    }).then(function() {
+    }).then(function () {
         // All checks are complete, do the insert.
         return new Promise(function (resolve, reject) {
             let values = [buyer_id, auction_id, amount, logic.getCurrentDate()];
@@ -412,7 +429,7 @@ exports.addBid = function (values, done) {
         }).catch(function (err) {
             throw err;
         });
-    }).then(function(result) {
+    }).then(function (result) {
         return done(result);
     }).catch(function (err) {
         return done({"ERROR": err});

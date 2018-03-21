@@ -7,5 +7,6 @@ module.exports = {
     ERROR_NO_BIDS: "The auction has not bids.",
     ERROR_BAD_REQUEST: "Bad request",
     ERROR_ON_SERVER: "Server error",
-    ERROR_UNAUTHORISED: "Unauthorised"
+    ERROR_UNAUTHORISED: "Unauthorised",
+    ERROR_NOT_FOUND: "not found"
 };
