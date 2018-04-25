@@ -69,7 +69,7 @@ exports.login = function (req, res) {
 };
 
 exports.logout = function (req, res) {
-    User.logout(req.headers["x-api-key"], function (result) {
+    User.logout(req.headers["x-authorization"], function (result) {
         if (result["ERROR"] === errors.ERROR_UNAUTHORISED) {
             res.statusCode = 401;
             res.statusMessage = "Unauthorised";
@@ -84,7 +84,7 @@ exports.logout = function (req, res) {
 
 exports.viewUser = function (req, res) {
     let user_id = parseInt(req.params.id);
-    let token = req.headers["x-api-key"];
+    let token = req.headers["x-authorization"];
     let values = [user_id, token];
 
     User.viewUser(values, function (result) {
@@ -107,7 +107,7 @@ exports.viewUser = function (req, res) {
 
 exports.editUser = function (req, res) {
     let user_id = parseInt(req.params.id);
-    let token = req.headers["x-api-key"];
+    let token = req.headers["x-authorization"];
     let values = [
         user_id,
         token,

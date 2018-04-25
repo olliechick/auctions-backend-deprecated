@@ -29,7 +29,7 @@ exports.showPhoto = function (req, res) {
 
 exports.addPhoto = function (req, res) {
     let id = parseInt(req.params.id);
-    let token = req.headers["x-api-key"];
+    let token = req.headers["x-authorization"];
     let values = [id, token];
 
     Photo.addPhoto(values, function (result) {
@@ -93,7 +93,7 @@ exports.addPhoto = function (req, res) {
 
 exports.deletePhoto = function (req, res) {
     let id = parseInt(req.params.id);
-    let token = req.headers["x-api-key"];
+    let token = req.headers["x-authorization"];
     let values = [id, token];
 
     Photo.deletePhoto(values, function (result) {

@@ -29,7 +29,8 @@ exports.getAll = function (values, done) {
     let nonNullValues = [];
 
     // Build query based on parameters
-    let queryString = "SELECT auction.* FROM auction";
+    let queryString = "SELECT auction.*, category_title FROM auction " +
+        "JOIN category ON auction_categoryid = category_id ";
 
     // Where
     let whereQueries = false; // used to check if the keyword WHERE has already been inserted
@@ -130,7 +131,23 @@ exports.getAll = function (values, done) {
     db.get_pool().query(queryString, nonNullValues, function (err, rows) {
 
         if (err) return done({"ERROR": errors.ERROR_SELECTING});
-        return done(rows);
+
+        let auction;
+        let auction_json;
+        let auctions_json = [];
+
+        for (let i = 0; i < rows.length; i++) {
+            auction = rows[i];
+            auction_json = {};
+            auction_json.categoryTitle = auction["category_title"];
+            auction_json.endDateTime = auction["auction_endingdate"];
+            auction_json.id = auction["auction_id"];
+            auction_json.reservePrice = auction["auction_reserveprice"];
+            auction_json.startDateTime = auction["auction_startingdate"];
+            auction_json.title = auction["auction_title"];
+            auctions_json.push(auction_json);
+        }
+        return done(auctions_json);
     });
 };
 

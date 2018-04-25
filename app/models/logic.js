@@ -9,7 +9,7 @@ exports.isJsonString = function(str) {
         return false;
     }
     return true;
-}
+};
 
 
 /**
@@ -46,7 +46,7 @@ exports.createNewBidsJsonArray = function(jsonBids) {
             bid.amount = json["bid_amount"];
             bid.datetime = exports.datetimeStringToUnixTimeMilliseconds(json["bid_datetime"]);
             bid.buyerId = json["bid_userid"];
-            bid.username = json["buyer_username"];
+            bid.buyerUsername = json["buyer_username"];
             bids.push(bid);
         }
     }

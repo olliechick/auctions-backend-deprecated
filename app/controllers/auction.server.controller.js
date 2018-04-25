@@ -59,7 +59,7 @@ exports.list = function (req, res) {
 exports.create = function (req, res) {
 
     let userid;
-    if (req.headers["x-api-key"] === logic.token) { //if auth'd
+    if (req.headers["x-authorization"] === logic.token) { //if auth'd
         userid = logic.token_user_id;
     } else {
         res.statusCode = 401;
@@ -198,7 +198,7 @@ exports.edit = function (req, res) {
         endingdate,
         reserveprice,
         startingprice,
-        req.headers["x-api-key"]
+        req.headers["x-authorization"]
     ];
 
     Auction.alter(values, function (result) {
@@ -267,7 +267,7 @@ exports.getBids = function (req, res) {
 exports.addBid = function (req, res) {
     let auction_id = parseInt(req.params.id);
     let amount = parseInt(req.query["amount"]);
-    let token = req.headers["x-api-key"];
+    let token = req.headers["x-authorization"];
 
     if (!logic.arePositiveIntegers([auction_id, amount])) {
         res.statusCode = 400;
